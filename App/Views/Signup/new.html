@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Signup{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-sm-10 col-md-8 col-lg-6 my-4">
+        {% if user.errors is not empty %}
+            {% for error in user.errors %}
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                {{ error }}
+            </div>
+            {% endfor %}           
+        {% endif %}
+        <div class="card mt-4">
+            <div class="card-header text-center">
+                <h3>Sign Up</h3>
+            </div>
+            <div class="card-body">
+                <form action="/login-mvc/signup/create" method="post" id="registerForm">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" name="username" class="form-control form-control-sm" value="{{ user.username }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" class="form-control form-control-sm" value="{{ user.email }}" >
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control form-control-sm" name="password" value="{{ user.password }}" id="password">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Password</label>
+                        <input type="password" class="form-control form-control-sm" name="confirm_password" value="{{ user.confirm_password }}" id="confirm_password" >
+                    </div>
+                    <input type="submit" name="submit" class="btn btn-primary" value="Submit">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}  
+    <script src="/login-mvc/public/js/jquery.validate.min.js"></script>
+    <script src="/login-mvc/public/js/hideShowPassword.min.js"></script>
+    <script src="/login-mvc/public/js/app.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#registerForm').validate({
+                rules: {
+                    username: 'required',
+                    email: {
+                        required: true,
+                        email: true,
+                        remote:'/login-mvc/account/emailValidate'
+                    },
+                    password: {
+                        required: true,
+                        minlength: 6,
+                        validPassword: true
+                    },
+                    confirm_password: {
+                        required: true,
+                        equalTo: '#password'
+                    }
+                },
+                messages: {
+                    email: {
+                        remote: 'this email already taken'
+                    }
+                }
+            });
+
+            $('#password').hideShowPassword({
+                show: false,
+                innerToggle: 'focus'
+            });
+
+            $('#confirm_password').hideShowPassword({
+                show: false,
+                innerToggle: 'focus'
+            });
+        });
+    </script>
+{% endblock %}

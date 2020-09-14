@@ -1,0 +1,4 @@
+[14-Aug-2020 17:41:08 Europe/Berlin] Uncaught exception: 'Exception' with message: 'No route match.'
+Stack trace: #0 C:\xampp\htdocs\MVC_Scratch\public\index.php(44): Core\Router->dispatch('test')
+#1 {main}
+Throw in 'C:\xampp\htdocs\MVC_Scratch\Core\Router.php' on line 88

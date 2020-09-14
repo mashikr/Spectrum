@@ -1,0 +1,12 @@
+[15-Aug-2020 04:43:51 Europe/Berlin] Uncaught exception: 'Exception' with message: 'Controller class App\Controllers\Test not found.'
+Stack trace: #0 C:\xampp\htdocs\MVC_Scratch\public\index.php(44): Core\Router->dispatch('test/new')
+#1 {main}
+Throw in 'C:\xampp\htdocs\MVC_Scratch\Core\Router.php' on line 84
+//////////////////////////////////
+
+[15-Aug-2020 04:43:54 Europe/Berlin] Uncaught exception: 'Exception' with message: 'Controller class App\Controllers\Test not found.'
+Stack trace: #0 C:\xampp\htdocs\MVC_Scratch\public\index.php(44): Core\Router->dispatch('test/new')
+#1 {main}
+Throw in 'C:\xampp\htdocs\MVC_Scratch\Core\Router.php' on line 84
+//////////////////////////////////
+

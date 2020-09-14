@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Spectrum{% endblock %}
+
+{% block body %}
+    <div class="mt-4">
+        {% for msg in flash_msg %}        
+            {% if msg.type == 'success' %}        
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                    {{ msg.msg }}
+                </div>
+            {% else %}
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                    {{ msg.msg }}
+                </div>
+            {% endif %}
+        {% endfor %}
+        
+        <div class="text-center display-4">
+
+            {% if username %}
+                Welcome {{ username }}
+            {% else %}
+                Welcome to Log in app
+            {% endif %}
+        </div>
+    </div>
+    
+{% endblock %}
