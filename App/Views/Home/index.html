@@ -3,7 +3,7 @@
 {% block title %}Spectrum{% endblock %}
 
 {% block body %}
-    <div class="mt-4">
+    <div class="home p-4">
         {% for msg in flash_msg %}        
             {% if msg.type == 'success' %}        
                 <div class="alert alert-success alert-dismissable">
@@ -18,14 +18,48 @@
             {% endif %}
         {% endfor %}
         
-        <div class="text-center display-4">
+        <div class="row mx-auto justify-content-center h-100">
+            <div class="col-md-7 col-lg-8 d-flex flex-column justify-content-center align-items-start">
+                <div class="d-flex flex-column align-items-center">
+                    <div class="d-flex mb-3">
+                        <img class="icon-img mr-3" src="{{ folder }} /public/img/icon2.png" alt="Icon">
+                        <img class="logo-img" src="{{ folder }} /public/img/logo-text-dark.png" alt="Text logo">
+                    </div>
+                    <h5 class="text-center">Conneting peaple. Please log in to connect with people</h5>
+                </div>
+            </div>
 
-            {% if username %}
-                Welcome {{ username }}
-            {% else %}
-                Welcome to Log in app
-            {% endif %}
+            <div class="col-sm-8 col-md-5 col-lg-4 d-flex justify-content-center align-items-center p-3">
+                <div class="card w-100">
+                    <div class="card-body">
+                        <form action="{{ folder }}/login/new" method="post" id="loginForm">
+                            <div class="form-group">
+                                <input type="email" name="email" class="form-control" value="{{ email }}" placeholder="Enter email" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" name="password" value="{{ password }}" id="password" placeholder="Enter password" required>
+                                <div class="error">{{ login_error }}</div>
+                            </div>
+                            <input type="submit" name="submit" class="btn btn-block btn-primary mb-2" value="Log in">
+                            <a class="" href="{{ folder }}/password/forgot">Forgot password?</a>
+                        </form>
+                        <hr>
+                        <a href="{{ folder }}/signup" class="btn btn-block btn-success">Create an account</a>
+                    </div>
+                </div>
+            </div>
+           
         </div>
     </div>
     
+{% endblock %}
+
+{% block footer %}
+<script>
+$(document).ready(function() {
+    $('input').focus(function() {
+        $('.error').text('');
+    })
+});
+</script>
 {% endblock %}

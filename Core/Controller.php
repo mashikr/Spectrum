@@ -33,22 +33,21 @@ abstract class Controller {
     }
 
     public function redirect($url) {
-        header('location: /login-mvc' . $url, true, 303);
+        header('location: ' . \App\Config::FOLDER . $url, true, 303);
         exit;
     }
 
     public static function username() {
         $name = '';
-        $cookie = $_COOKIE['remember_me'] ?? false;
-        if (isset($_SESSION['username'])) {
-            $name = $_SESSION['username'];
+        $cookie = $_COOKIE['spectrum_remember'] ?? false;
+    
+        if (isset($_SESSION['user_id'])) {
+            $name = $_SESSION['user_id'];
         } elseif ($cookie) {
             $user = User::getUserByToken($cookie);
             $_SESSION['user_id'] = $user['user_id'];
-            $_SESSION['username'] = $user['name'];
             $_SESSION['email'] = $user['email'];
             
-            $name = $user['name'];
         }
 
         return $name;

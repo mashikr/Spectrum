@@ -17,25 +17,22 @@ class Login extends \Core\Controller {
 
   public function newAction() {
       $user = User::authenticate($_POST['email'], $_POST['password']);
-      $remember_me = null;
+      
       if ($user) {
           session_regenerate_id(true);
           $_SESSION['user_id'] = $user->id;
-          $_SESSION['username'] = $user->username;
+          $_SESSION['firstname'] = $user->firstname;
+          $_SESSION['lastname'] = $user->lastname;
           $_SESSION['email'] = $user->email;
 
-          if (isset($_POST['remember_me'])) {
-            User::rememberLogin($user->id, $user->username, $user->email);
-          }
+         
+          User::rememberLogin($user->id,  $user->email);
           
-          Flash::addMessage('Successfully Login!', 'success');
-          $this->redirect('/');
+          $this->redirect('/profile');
       } else {
-        Flash::addMessage('Email or password is wrong!', 'error');
-        View::renderTemplate('Login/login.html',[
-            'page' => 'login',
+        View::renderTemplate('Home/index.html',[
             'email' => $_POST['email'],
-            'remember_me' => $remember_me
+            'login_error' => 'Password wrong!'
         ]);
       }
   }

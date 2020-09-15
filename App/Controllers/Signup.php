@@ -18,9 +18,7 @@ class Signup extends \Core\Controller
    * @return void
    */
   public function newAction() {
-      View::renderTemplate('Signup/new.html',[
-        'page' => 'signup'
-    ]);
+      View::renderTemplate('Signup/new.html');
   }
 
   public function createAction() {
@@ -29,9 +27,9 @@ class Signup extends \Core\Controller
       if ($newUser->create()) {
         $this->redirect('/signup/success');
       } else {
+        
         View::renderTemplate('Signup/new.html', [
-          'user' => $newUser,
-          'page' => 'signup'
+          'user' => $newUser
         ]);
       }
   }

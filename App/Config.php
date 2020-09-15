@@ -6,13 +6,13 @@ class Config {
     
     const DB_HOST = 'localhost';
 
-    const DB_NAME = 'login_mvc';
+    const DB_NAME = 'spectrum';
 
     const DB_USER = 'root';
 
     const DB_PASSWORD = '';
 
-    const SHOW_ERROR = true;
+    const SHOW_ERROR = false;
 
     const SECRET_KEY = 'GxaXj3QFBnwrVLzNXWOGhdYRxF8m58NV';
 

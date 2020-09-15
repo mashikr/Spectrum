@@ -1,31 +1,25 @@
 {% extends "base.html" %}
 
-{% block title %}Reset password{% endblock %}
+{% block title %}Spectrum | Reset password{% endblock %}
 
 {% block body %}
 <div class="row justify-content-center">
     <div class="col-sm-10 col-md-8 col-lg-6 my-4">
-        {% if user.errors is not empty %}
-            {% for error in user.errors %}
-            <div class="alert alert-danger alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
-                {{ error }}
-            </div>
-            {% endfor %}           
-        {% endif %}
         <div class="card mt-4">
             <div class="card-header text-center">
-                <h3>Reset password</h3>
+                <h5 >Reset password</h5>
             </div>
             <div class="card-body">
-                <form action="/login-mvc/password/new" method="post" id="registerForm">
+                <form action="{{ folder }}/password/new" method="post" id="registerForm">
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" class="form-control form-control-sm" name="password" value="{{ user.password }}" id="password">
+                        <input type="password" class="form-control" placeholder="Enter new password" name="password" value="{{ user.password }}" id="password">
+                        <div class="error">{{ user.errors.password }}</div>
                     </div>
                     <div class="form-group">
-                        <label for="confirm_password">Password</label>
-                        <input type="password" class="form-control form-control-sm" name="confirm_password" value="{{ user.confirm_password }}" id="confirm_password" >
+                        <label for="confirm_password">Confirm password</label>
+                        <input type="password" class="form-control" placeholder="Enter confirm password" name="confirm_password" value="{{ user.confirm_password }}" id="confirm_password" >
+                        <div class="error">{{ user.errors.confirm_password }}</div>
                     </div>
                     <input type="hidden" name="token" value="{{ token }}">
                     <input type="submit" name="submit" class="btn btn-primary" value="Reset">
@@ -38,10 +32,25 @@
 
 {% block footer %}  
     <script src="/login-mvc/public/js/jquery.validate.min.js"></script>
-    <script src="/login-mvc/public/js/hideShowPassword.min.js"></script>
-    <script src="/login-mvc/public/js/app.js"></script>
     <script>
         $(document).ready(function() {
+            $.validator.addMethod('validPassword',
+                function(value, ele, param) {
+                    if (value != '') {
+                        if (value.match(/.*[a-z]+.*/i) == null) {
+                            return false;
+                        }
+
+                        if (value.match(/.*\d+.*/i) == null) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                },
+                'Must contain at least one letter and one number'
+            );
+            
             $('#registerForm').validate({
                 rules: {
                     password: {
@@ -53,22 +62,7 @@
                         required: true,
                         equalTo: '#password'
                     }
-                },
-                messages: {
-                    email: {
-                        remote: 'this email already taken'
-                    }
                 }
-            });
-
-            $('#password').hideShowPassword({
-                show: false,
-                innerToggle: 'focus'
-            });
-
-            $('#confirm_password').hideShowPassword({
-                show: false,
-                innerToggle: 'focus'
             });
         });
     </script>

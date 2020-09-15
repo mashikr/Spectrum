@@ -6,14 +6,10 @@ use \Core\View;
 
 class Home extends \Core\Controller {
 
-    protected function before() {
-
-    }
-
-    protected function after() {
-    }
-
     public function indexAction() {
+        if (isset($_SESSION['user_id']) && isset($_SESSION['email'])) {
+            $this->redirect('/profile');
+        }
         View::renderTemplate('Home/index.html');
     }
 }

@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use \App\Models\User;
 
-class Account extends \Core\Controller {
+class Ajax extends \Core\Controller {
 
     public function emailValidateAction() {
         $is_valid = ! User::emailExists($_GET['email']);

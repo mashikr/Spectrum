@@ -17,16 +17,20 @@ class Password extends \Core\Controller {
         $user_exists = User::findByEmail($_POST['email']);
         if ($user_exists) {
             if (User::passwordResetStart($_POST['email'])) {
-                Flash::addMessage('Sending a email successfuly, Please check inbox', 'success');
-                $this->redirect('/');
+                $this->redirect('/password/sendEmail');
             } else {
-                Flash::addMessage('Something went wrong!', 'error');
-                View::renderTemplate('Password/forgot.html');
+                View::renderTemplate('500.html');
             }            
         } else {
-            Flash::addMessage('This email is\'t exists', 'error');
-            View::renderTemplate('Password/forgot.html');
+            View::renderTemplate('Password/forgot.html', [
+                'email' => $_POST['email'],
+                'error' => 'User email not exists!'
+            ]);
         }
+    }
+
+    public function sendEmailAction() {
+        View::renderTemplate('Password/sendEmail.html');
     }
 
     public function resetAction() {

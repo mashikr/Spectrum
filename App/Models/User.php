@@ -27,13 +27,16 @@ class User extends \Core\Model {
                 $active_token = $token->getValue();
 
                 $this->password = password_hash($this->password, PASSWORD_DEFAULT);
-                $sql = "INSERT INTO `users`(`username`, `email`, `password`, `account_active_hash`) VALUES (:username,:email,:password,:active_hash)";
-                
+                $sql = "INSERT INTO `users`(`firstname`, `lastname`, `email`,`dob`, `gender`, `password`, `account_active_hash`) VALUES (:firstname, :lastname, :email, :dob, :gender, :password, :active_hash)";
+
                 $db = static::getDB();
                 $stmt = $db->prepare($sql);
                                                       
-                $stmt->bindValue(':username', $this->username, PDO::PARAM_STR);
+                $stmt->bindValue(':firstname', $this->firstname, PDO::PARAM_STR);
+                $stmt->bindValue(':lastname', $this->lastname, PDO::PARAM_STR);
                 $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
+                $stmt->bindValue(':dob', $this->dob, PDO::PARAM_STR);
+                $stmt->bindValue(':gender', $this->gender, PDO::PARAM_STR);
                 $stmt->bindValue(':password', $this->password, PDO::PARAM_STR);
                 $stmt->bindValue(':active_hash', $hashed_token, PDO::PARAM_STR);
                 
@@ -51,7 +54,7 @@ class User extends \Core\Model {
     }
 
     protected function sendActivateEmail($token, $email) {
-        $url = "http://localhost/login-mvc/signup/active/" . $token;
+        $url = \App\Config::URL_ROOT . "/signup/active/" . $token;
 
         $text = "Please click on the following URL to active your account: " . $url;
         $html = "Please click <a href='$url'>here</a> to active your account";
@@ -60,32 +63,42 @@ class User extends \Core\Model {
     }
 
     protected function validate() {
-        if ($this->username == '') {
-            $this->errors[] = 'Name is required';
+        if ($this->firstname == '') {
+            $this->errors['firstname'] = 'First name is required';
+        } else if (!preg_match('/^[a-z A-Z]*$/', $this->firstname )) {
+            $this->errors['firstname'] = 'Don\'t use special char or number';
+        }
+
+        if ($this->lastname == '') {
+            $this->errors['lastname'] = 'Last name is required';
+        } else if (!preg_match('/^[a-z A-Z]*$/', $this->lastname )) {
+            $this->errors['lastname'] = 'Don\'t use special char or number';
         }
 
         if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
-            $this->errors[] = 'Invalid email';
+            $this->errors['email'] = 'Invalid email';
+        } else if ($this->emailExists($this->email, $this->id ?? null)) {
+            $this->errors['email'] = 'This email is already taken';
         }
 
-        if ($this->emailExists($this->email, $this->id ?? null)) {
-            $this->errors[] = 'This email is already taken';
+        $cur_year = date("Y",time());
+        $year = date_format(date_create($this->dob),"Y");
+
+        if ($cur_year - $year < 10) {
+            $this->errors['dob'] = 'User age need 10+ year';
         }
+
 
         if ($this->password != $this->confirm_password) {
-            $this->errors[] = 'Password do not match';
+            $this->errors['confirm_password'] = 'Password do not match';
         }
 
         if (strlen($this->password) < 6) {
-            $this->errors[] = 'Please enter at least 6 character for the password';
-        }
-
-        if (preg_match('/.*[a-z]+.*/i', $this->password) == 0) {
-            $this->errors[] = 'Password needs at least one letter';
-        }
-
-        if (preg_match('/.*\d+.*/i', $this->password) == 0) {
-            $this->errors[] = 'Password needs at least one number';
+            $this->errors['password'] = 'Please enter at least 6 character for the password';
+        } else if (preg_match('/.*[a-z]+.*/i', $this->password) == 0) {
+            $this->errors['password'] = 'Password needs at least one letter';
+        } else if (preg_match('/.*\d+.*/i', $this->password) == 0) {
+            $this->errors['password'] = 'Password needs at least one number';
         }
     }
 
@@ -145,34 +158,33 @@ class User extends \Core\Model {
         return false;
     }
 
-    public static function rememberLogin($id, $name, $email) {
+    public static function rememberLogin($id, $email) {
         $token = new Token();
         $hashed_token = $token->getHash();
         $remember_token = $token->getValue();
 
         $expire_timestamp = time() + 60 * 60 * 24 * 30;
 
-        setcookie('remember_me', $remember_token, $expire_timestamp, '/');
+        setcookie('spectrum_remember', $remember_token, $expire_timestamp, '/');
 
-        $sql = 'INSERT INTO `remember_logins`(`token`, `user_id`, `name`, `email`, `expired_at`) VALUES (:token, :user_id, :name, :email, :expire_at)';
+        $sql = 'INSERT INTO `remember_logins`(`token`, `user_id`, `email`, `expired_at`) VALUES (:token, :user_id, :email, :expire_at)';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
 
         $stmt->bindValue(':token', $hashed_token, PDO::PARAM_STR);
         $stmt->bindValue(':user_id', $id, PDO::PARAM_STR);
-        $stmt->bindValue(':name', $name, PDO::PARAM_STR);
         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
         $stmt->bindValue(':expire_at', date('Y-m-d H:i:s', $expire_timestamp), PDO::PARAM_STR);
 
         return $stmt->execute();
     }
 
-    public static function getUserByToken($token_code) {
+    public static function getUserByToken($token_code) {    
         $token = new Token($token_code);
         $token_hash = $token->getHash();
 
-        $sql = 'SELECT user_id, name, email FROM `remember_logins` WHERE `token` = :token';
+        $sql = 'SELECT user_id, email FROM `remember_logins` WHERE `token` = :token';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -184,7 +196,7 @@ class User extends \Core\Model {
     }
 
     public static function forgetLogin() {
-        $cookie = $_COOKIE['remember_me'] ?? false;
+        $cookie = $_COOKIE['spectrum_remember'] ?? false;
 
         if ($cookie) {
             $token = new Token($cookie);
@@ -198,7 +210,7 @@ class User extends \Core\Model {
 
             $stmt->execute();
 
-            setcookie('remember_me', '', time() - 3600, '/');      
+            setcookie('spectrum_remember', '', time() - 3600, '/');      
         }
     }
 
@@ -214,7 +226,7 @@ class User extends \Core\Model {
 
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':hashed_token', $hashed_token, PDO::PARAM_STR);
-        $stmt->bindValue(':expiry_time', \date('Y-m-d H:i:s', $expiry_time), PDO::PARAM_STR);
+        $stmt->bindValue(':expiry_time', date('Y-m-d H:i:s', $expiry_time), PDO::PARAM_STR);
         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
 
         if (static::sendEmail($email, $token)) {
@@ -223,7 +235,7 @@ class User extends \Core\Model {
         return false;
     }
     public static function sendEmail($email, $token) {
-        $url = "http://localhost/login-mvc/password/reset/" . $token;
+        $url = \App\Config::URL_ROOT . "/password/reset/" . $token;
 
         $text = "Please click on the following URL to reset your password: " . $url;
         $html = "Please click <a href='$url'>here</a> to reset your password";

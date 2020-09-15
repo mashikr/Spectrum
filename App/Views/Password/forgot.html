@@ -1,34 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}Forgot password{% endblock %}
+{% block title %}Spectrum | Forgot password{% endblock %}
 
 {% block body %}
 <div class="row justify-content-center">
-    <div class="col-sm-10 col-md-8 col-lg-6 my-4">
-        {% for msg in flash_msg %}        
-            {% if msg.type == 'success' %}        
-                <div class="alert alert-success alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
-                    {{ msg.msg }}
-                </div>
-            {% else %}
-                <div class="alert alert-danger alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
-                    {{ msg.msg }}
-                </div>
-            {% endif %}
-        {% endfor %}
-        
+    <div class="col-sm-10 col-md-8 col-lg-6 my-4">        
 
         <div class="card mt-4">
             <div class="card-header text-center">
-                <h3>Forgot password</h3>
+                <h5>Forgot password</h5>
             </div>
             <div class="card-body">
-                <form action="/login-mvc/password/sendResetReq" method="post" id="loginForm">
+                <form action="{{ folder }}/password/sendResetReq" method="post" id="loginForm">
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" name="email" class="form-control form-control-sm" value="{{ email }}" required>
+                        <label for="email">Email :</label>
+                        <input type="email" name="email" placeholder="Enter email" class="form-control" value="{{ email }}" required>
+                        <div class="error">{{ error }}</div>
                     </div>
                     <input type="submit" name="submit" class="btn btn-success" value="Send link">
                 </form>
@@ -36,4 +23,13 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block footer %}
+<script>
+$(document).ready(function() {
+    $('input').focus(function() {
+        $('.error').text('');
+    })
+});
+</script>
 {% endblock %}
