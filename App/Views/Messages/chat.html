@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Spectrum | Messages{% endblock %}
+{% block body %}
+    <div class="msg-body d-flex flex-column">
+        {{ include ("navbar.html") }}
+
+        <div style="height: 3.78rem;"></div>
+        <div class="row media-body justify-content-center h-75">
+            <div class="col-3 col-sm-4 col-lg-3 p-2 pl-4 h-100">
+                <div class="d-flex flex-column overflow-y">
+
+                    {{ include ("Messages/chatHolder.html")}}
+                    
+
+                </div>
+            </div>
+            <div class="col col-lg-6 border-left pr-4 h-100 pr-lg-0">
+                
+                <div class="d-flex flex-column justify-content-between h-100">
+
+                    <div class="bg-white border-bottom">
+                        <a href="{{ url_root }}/profile" title="Profile" class="nav-link d-flex align-items-center"> 
+                            <div class="profile-icon-img-overlay-link mr-2"><img src="{{ folder }} /public/img/male-user.png" alt="user Icon"></div> Ashikur Rahman
+                        </a>
+                    </div>
+                    
+                    <div class="media-body px-1 h-75">
+
+                        <div class="overflow-y pr-2" id="message-body">
+            
+                            {{ include ("Messages/messages.html")}}
+            
+                        </div>
+            
+                    </div>
+                    
+                    <div class="d-flex align-items-center border-top py-2">
+                        <input class="form-control form-control-sm" type="text">
+            
+                        <input class="d-none" type="file" id="send-image"> 
+                        <label class="p-1 m-0 ml-1 h4 pointer" for="send-image"><i class="far fa-images"></i></label>
+            
+                        <div class="p-1 h4 mb-0 pointer position-relative" id="msg-chat-emoji">
+                            <i class="far fa-grin chat-emoji"></i> 
+                            <div class="chat-emoji-body d-none rounded p-2 shadow">
+                                <img src="{{ folder }}/public/emoji/emoji-1.png" alt="imoji-1" class="emoji">
+                                <img src="{{ folder }}/public/emoji/emoji-2.png" alt="imoji-2" class="emoji">
+                                <img src="{{ folder }}/public/emoji/emoji-3.png" alt="imoji-3" class="emoji">
+                                <img src="{{ folder }}/public/emoji/emoji-4.png" alt="imoji-4" class="emoji">
+                                <img src="{{ folder }}/public/emoji/emoji-5.png" alt="imoji-5" class="emoji">
+                                <img src="{{ folder }}/public/emoji/emoji-6.png" alt="imoji-6" class="emoji">
+                                <img src="{{ folder }}/public/emoji/emoji-7.png" alt="imoji-7" class="emoji">
+                                <img src="{{ folder }}/public/emoji/emoji-8.png" alt="imoji-8" class="emoji">
+                                <img src="{{ folder }}/public/emoji/emoji-9.png" alt="imoji-9" class="emoji">
+                                <img src="{{ folder }}/public/emoji/emoji-10.png" alt="imoji-10" class="emoji">
+                                <img src="{{ folder }}/public/emoji/emoji-11.png" alt="imoji-11" class="emoji">
+                                <img src="{{ folder }}/public/emoji/emoji-12.png" alt="imoji-12" class="emoji">
+                                <img src="{{ folder }}/public/emoji/emoji-13.png" alt="imoji-13" class="emoji">
+                                <img src="{{ folder }}/public/emoji/emoji-14.png" alt="imoji-14" class="emoji">
+                                <img src="{{ folder }}/public/emoji/emoji-15.png" alt="imoji-15" class="emoji">
+                                <img src="{{ folder }}/public/emoji/emoji-16.png" alt="imoji-16" class="emoji">
+                            </div> 
+                        </div>
+            
+                        <input class="d-none" type="file" id="send-file"> 
+                        <label class="p-1 m-0 h4 pointer" for="send-file"><i class="fas fa-link"></i></label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

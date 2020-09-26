@@ -1,20 +1,325 @@
 {% extends "base.html" %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}Spectrum | Profile{% endblock %}
 
 {% block body %}
-<div class="row justify-content-center">
-    <div class="col-sm-10 col-md-8 col-lg-6 my-4">  
-        <div class="card mt-4">
-            <div class="card-header text-center">
-                <h3>Profile</h3>
-            </div>
-            <div class="card-body">
-                User id: {{ id }} <br>
-                Name: {{ name }} <br>
-                Email: {{ email }}
+{{ include ("navbar.html") }}
+
+<div style="height: 3.78rem;"></div>
+<div class="container profile-div pb-4">
+
+    <div style="background-image: url('{{ folder }}/public/img/ashik-c.JPG');" class="position-relative profile-cover-pic pointer">
+        <!-- <img src="{{ folder }}/public/img/ashik-c.JPG" alt="Ashik" class="img-fluid rounded"> -->
+        <div class="profile-img">
+            <div class="profile-img-overlay">
+                <a href="#"><img src="{{ folder }}/public/img/ashik.JPG" alt=""></a>
+                <div class="profile-pic-update-btn"><i class="fas fa-camera"></i></div>
             </div>
         </div>
+        <div class="cover-pic-update-btn btn btn-light btn-sm"><i class="fas fa-camera"></i> Update Cover Pic</div>
     </div>
+
+    <!-- update profile and cover pic-->
+  
+  <!-- Modal -->
+  <div class="modal" id="photoUpdateModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="photoUpdateModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+              <label class="btn btn-primary" for="update-photo"><h6 class="m-0"><i class="fas fa-plus"></i> Upload a photo</h6></label> <hr>
+              <input type="file" class="d-none" name="image" id="update-photo">
+              Select a photo:
+              <div class="row mt-2">
+                  <div class="col-4 py-2">
+                      <a href="#"><img src="{{ folder }}/public/img/ashik.JPG" class="img-fluid rounded" alt="Ashik"></a>
+                  </div>
+                  <div class="col-4 py-2">
+                    <a href="#"><img src="{{ folder }}/public/img/ashik.JPG" class="img-fluid rounded" alt="Ashik"></a>
+                  </div>
+                  <div class="col-4 py-2">
+                    <a href="#"><img src="{{ folder }}/public/img/ashik.JPG" class="img-fluid rounded" alt="Ashik"></a>
+                  </div>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Modal end -->
+
+    <h3 class="text-center text-dark my-4">Md Ashikur Rahman</h3>
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a class="nav-link active" id="timeline-tab" data-toggle="tab" href="#timeline" role="tab" aria-controls="timeline" aria-selected="true">Timeline</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link" id="about-tab" data-toggle="tab" href="#about" role="tab" aria-controls="about" aria-selected="false">About</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link" id="friends-tab" data-toggle="tab" href="#friends" role="tab" aria-controls="friends" aria-selected="false">Friends (10)</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="photos-tab" data-toggle="tab" href="#photos" role="tab" aria-controls="photos" aria-selected="false">Photos</a>
+          </li>
+      </ul>
+
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="timeline" role="tabpanel" aria-labelledby="timeline-tab">
+
+            <div class="bg-light p-3 mt-2">
+                <form action="posts/add" method="post">
+                    <textarea class="form-control" name="post">Share Something....</textarea>
+                <div class="d-flex mt-2 justify-content-between">
+                    <div class="custom-file w-50">
+                        <label class="custom-file-label" for="customFile">Add image or file</label>
+                        <input type="file" class="custom-file-input" id="customFile">
+                    </div>
+                    <select class="custom-select w-25" title="Privacy">
+                        <option value="Friends">Friends</option>
+                        <option value="Public">Public</option>
+                        <option value="Private">Private</option>
+                      </select>
+                    <input type="submit" class="btn btn-primary" name="submit" value="Post">
+                </div>
+                </form>
+            </div>
+
+            <hr>
+            
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex align-items-center"> 
+                        <div class="profile-icon-img-overlay mr-2">
+                            <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
+                        </div>
+                        <div class="d-flex flex-column">
+                           <a href="#">Ashikur Rahman</a>
+                           <small class="text-muted">1 hour ago <i class="fas fa-user-friends ml-2"></i></small>
+                        </div>
+                    </div>
+                    <div class="post-content mt-2">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum facilis mollitia quas. Nostrum, labore iusto, doloribus provident voluptatum alias veniam voluptas accusantium ea eum ut magnam nulla quia rem debitis.
+
+                        <img src="{{ folder }}/public/img/bg-img.jpg" class="img-fluid mt-2" alt="">
+                    </div>
+                    <div class="d-flex justify-content-between mt-2">
+                        <a href="#">20 Likes</a>
+                        <a href="#">30 Comments</a>
+                    </div>
+                    <hr class="m-0">
+                    <div class="d-flex mt-2 align-items-start">
+                        <div class="btn btn-sm w-100 btn-light mr-3"><i class="far fa-thumbs-up"></i> Like</div>
+                        <div class="btn btn-sm w-100 btn-light"><i class="far fa-comment-alt"></i> Comment</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex align-items-center"> 
+                        <div class="profile-icon-img-overlay mr-2">
+                            <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
+                        </div>
+                        <div class="d-flex flex-column">
+                           <a href="#">Ashikur Rahman</a>
+                           <small class="text-muted">1 hour ago <i class="fas fa-user-friends ml-2"></i></small>
+                        </div>
+                    </div>
+                    <div class="post-content mt-2">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum facilis mollitia quas. Nostrum, labore iusto, doloribus provident voluptatum alias veniam voluptas accusantium ea eum ut magnam nulla quia rem debitis.
+
+                        <img src="{{ folder }}/public/img/logo-text-dark.png" class="img-fluid mt-2" alt="">
+                    </div>
+                    <div class="d-flex justify-content-between mt-2">
+                        <a href="#">20 Likes</a>
+                        <a href="#">30 Comments</a>
+                    </div>
+                    <hr class="m-0">
+                    <div class="d-flex mt-2 align-items-start">
+                        <div class="btn btn-sm w-100 btn-light mr-3"><i class="far fa-thumbs-up"></i> Like</div>
+                        <div class="btn btn-sm w-100 btn-light"><i class="far fa-comment-alt"></i> Comment</div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="tab-pane fade p-3 text-muted" id="about" role="tabpanel" aria-labelledby="about-tab">
+            
+            <div class="row">
+                <div class="col-4"><i class="fas fa-briefcase"></i> <b>Works at </b></div> 
+                <div class="col" id="worksAt">
+                    Class Representative of 12th Batch at Department of Computer Science and Telecommunication Engineering, NSTU
+                </div>
+                <div class="col-1"><i data-target="worksAt" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-4"><i class="fas fa-graduation-cap"></i> <b>Studied</b> </div> 
+                <div class="col" id="studied">
+                    Computer Science & Telecommunication Engineering at Noakhali Science and Technology University
+                </div>
+                <div class="col-1"><i data-target="studied" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-4"><i class="fas fa-home"></i> <b>Lives in</b> </div>
+                <div class="col" id="lives-In">
+                    Noakhali, Chittagong, Bangladesh
+                </div>
+                <div class="col-1"><i data-target="lives-In" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-4"><i  class="fas fa-map-marker-alt"></i> <b>Home town</b> </div>
+                <div class="col" id="home-Town">
+                    Laksam, Cumilla
+                </div>
+                <div class="col-1"><i data-target="home-Town" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-4"><i class="fas fa-phone-alt"></i> <b>Phone no</b> </div>
+                <div class="col" id="phone-No">
+                    01712327242                    
+                </div>
+                <div class="col-1"><i data-target="phone-No" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-4"><i class="fas fa-envelope"></i> <b>Email</b> </div>
+                <div class="col">
+                    ashik@gmail.com
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-4"><i class="fas fa-birthday-cake"></i> <b>Birth Date</b> </div>
+                <div class="col">
+                    12 Sep, 1998
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-4"><i class="fas fa-venus-mars"></i> <b>Gender</b> </div>
+                <div class="col">
+                    Male
+                </div>
+            </div>
+        </div>
+
+        <!-- about update modal start-->
+        <div class="modal" id="aboutUpdateModal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title text-capitalize" id="aboutUpdateModalTitle">user login</h5>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                  <textarea id="aboutInput" class="form-control"></textarea>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
+                  <button type="button" id="update-about-btn" class="btn btn-success">Update</button>
+                </div>
+              </div>
+            </div>
+          </div>
+           <!-- about update modal end-->
+
+        <div class="tab-pane fade p-2" id="friends" role="tabpanel" aria-labelledby="friends-tab">
+            
+            <div class="row">
+                <div class="col-6 p-2">
+                    <div class="d-flex border rounded p-2">
+                        <img src="{{ folder }}/public/img/asif.PNG" alt="" class="w-25 rounded">
+                        <div class="ml-4 pt-2">
+                            <a href="#" class="h6">Asif mahmud</a> <br>
+                            <small class="text-muted">12 mutual friends</small>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col-6 p-2">
+                    <div class="d-flex border rounded p-2">
+                        <img src="{{ folder }}/public/img/forhad.PNG" alt="" class="w-25 rounded">
+                        <div class="ml-4 pt-2">
+                            <a href="#" class="h6">Frohad mia</a> <br>
+                            <small class="text-muted">12 mutual friends</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 p-2">
+                    <div class="d-flex border rounded p-2">
+                        <img src="{{ folder }}/public/img/forhad.PNG" alt="" class="w-25 rounded">
+                        <div class="ml-4 pt-2">
+                            <a href="#" class="h6">Frohad mia</a> <br>
+                            <small class="text-muted">12 mutual friends</small>
+                        </div>
+                    </div>                    
+                </div>
+                <div class="col-6 p-2">
+                    <div class="d-flex border rounded p-2">
+                        <img src="{{ folder }}/public/img/asif.PNG" alt="" class="w-25 rounded">
+                        <div class="ml-4 pt-2">
+                            <a href="#" class="h6">Asif mahmud</a> <br>
+                            <small class="text-muted">12 mutual friends</small>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+
+        </div>
+        <div class="tab-pane fade py-2" id="photos" role="tabpanel" aria-labelledby="photos-tab">
+            
+            <div class="row py-2">
+                <div class="col-6 col-sm-4 col-md-3 position-relative">
+                    <a href="#" class="gallery-img">
+                        <img src="{{ folder }}/public/img/ashik.JPG" alt="" class="img-fluid rounded">
+                    </a>
+
+                    <div class="dropdown image-action">
+                        <button class="image-action-toggler" data-img="img-1">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                        <div class="dropdown-menu" id="img-1">
+                          <a class="dropdown-item" href="#">Make Profile Picture</a>
+                          <a class="dropdown-item" href="#">Make Cover Photo</a>
+                          <a class="dropdown-item" href="#">Delete</a>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="col-6 col-sm-4 col-md-3 position-relative">
+                    <a href="#" class="gallery-img">
+                        <img src="{{ folder }}/public/img/anik.JPG" alt="" class="img-fluid rounded">
+                    </a>
+
+                    <div class="dropdown image-action">
+                        <button class="image-action-toggler" data-img="img-2">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                        <div class="dropdown-menu" id="img-2">
+                          <a class="dropdown-item" href="#">Make Profile Picture</a>
+                          <a class="dropdown-item" href="#">Make Cover Photo</a>
+                          <a class="dropdown-item" href="#">Delete</a>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+        </div>
+      </div>
+
 </div>
 {% endblock %}

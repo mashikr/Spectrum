@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Spectrum | Messages{% endblock %}
+{% block body %}
+    <div class="msg-body d-flex flex-column">
+        {{ include ("navbar.html") }}
+
+        <div style="height: 3.78rem;"></div>
+        <div class="row media-body justify-content-center h-75">
+            <div class="col-3 col-sm-4 col-lg-3 p-2 pl-4 h-100">
+                <div class="d-flex flex-column overflow-y">
+                    
+                    {{ include ("Messages/chatHolder.html")}}
+
+                </div>
+            </div>
+            <div class="col col-lg-6 border-left pr-4 h-100 pr-lg-0">
+                <div class="d-flex h-100 flex-column mt-5 align-items-center">
+                    <div class="d-flex mb-3">
+                        <img class="icon-img mr-3" src="{{ folder }} /public/img/icon2.png" alt="Icon">
+                        <img class="logo-img" src="{{ folder }} /public/img/logo-text-dark.png" alt="Text logo">
+                    </div>
+                    <span class="lead">Welcome Spectrum Messages System</span>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+{% endblock %}

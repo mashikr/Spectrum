@@ -9,12 +9,6 @@ use \App\Models\User;
 
 class Login extends \Core\Controller {
 
-  public function loginAction() {
-      View::renderTemplate('Login/login.html',[
-        'page' => 'login'
-    ]);
-  }
-
   public function newAction() {
       $user = User::authenticate($_POST['email'], $_POST['password']);
       
@@ -28,7 +22,7 @@ class Login extends \Core\Controller {
          
           User::rememberLogin($user->id,  $user->email);
           
-          $this->redirect('/profile');
+          $this->redirect('/home');
       } else {
         View::renderTemplate('Home/index.html',[
             'email' => $_POST['email'],

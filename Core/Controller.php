@@ -8,16 +8,17 @@ abstract class Controller {
 
     public function  __construct($route_params) {
         $this->route_params = $route_params;
+        $this->userId();
     }
 
     public function __call($name, $args) {
         $method = $name . 'Action';
 
         if (method_exists($this, $method)) {
-            if($this->before() !== false) {
-                call_user_func_array([$this, $method], $args);
-                $this->after();
-            }
+            
+            call_user_func_array([$this, $method], $args);
+            //$this->after();
+            
         } else {
             //echo "Method $method not found in controller " . get_class($this);
             throw new \Exception("Method $method not found in controller " . get_class($this));
@@ -26,6 +27,9 @@ abstract class Controller {
 
     protected function before() {
 
+        if (!$this->userId()) {
+            $this->redirect('/');
+        }
     }
 
     protected function after() {
@@ -37,20 +41,18 @@ abstract class Controller {
         exit;
     }
 
-    public static function username() {
-        $name = '';
+    public function userId() {
+        $user_id = null;
         $cookie = $_COOKIE['spectrum_remember'] ?? false;
     
         if (isset($_SESSION['user_id'])) {
-            $name = $_SESSION['user_id'];
+            $user_id = $_SESSION['user_id'];
         } elseif ($cookie) {
             $user = User::getUserByToken($cookie);
-            $_SESSION['user_id'] = $user['user_id'];
-            $_SESSION['email'] = $user['email'];
-            
+            $_SESSION['user_id'] = $user['user_id'];            
         }
 
-        return $name;
+        return $user_id;
     }
 }
 

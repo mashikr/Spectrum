@@ -12,7 +12,7 @@ class Config {
 
     const DB_PASSWORD = '';
 
-    const SHOW_ERROR = false;
+    const SHOW_ERROR = true;
 
     const SECRET_KEY = 'GxaXj3QFBnwrVLzNXWOGhdYRxF8m58NV';
 

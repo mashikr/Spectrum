@@ -1,0 +1,54 @@
+[17-Sep-2020 04:02:37 Europe/Berlin] Uncaught exception: 'Exception' with message: 'No route match.'
+Stack trace: #0 C:\xampp\htdocs\spectrum\public\index.php(35): Core\Router->dispatch('user')
+#1 {main}
+Throw in 'C:\xampp\htdocs\spectrum\Core\Router.php' on line 88
+//////////////////////////////////
+
+[17-Sep-2020 04:03:01 Europe/Berlin] Uncaught exception: 'Exception' with message: 'No route match.'
+Stack trace: #0 C:\xampp\htdocs\spectrum\public\index.php(35): Core\Router->dispatch('user')
+#1 {main}
+Throw in 'C:\xampp\htdocs\spectrum\Core\Router.php' on line 88
+//////////////////////////////////
+
+[17-Sep-2020 04:03:02 Europe/Berlin] Uncaught exception: 'Exception' with message: 'No route match.'
+Stack trace: #0 C:\xampp\htdocs\spectrum\public\index.php(35): Core\Router->dispatch('user')
+#1 {main}
+Throw in 'C:\xampp\htdocs\spectrum\Core\Router.php' on line 88
+//////////////////////////////////
+
+[17-Sep-2020 04:07:16 Europe/Berlin] Uncaught exception: 'Exception' with message: 'No route match.'
+Stack trace: #0 C:\xampp\htdocs\spectrum\public\index.php(35): Core\Router->dispatch('user')
+#1 {main}
+Throw in 'C:\xampp\htdocs\spectrum\Core\Router.php' on line 88
+//////////////////////////////////
+
+[17-Sep-2020 04:07:19 Europe/Berlin] Uncaught exception: 'Exception' with message: 'No route match.'
+Stack trace: #0 C:\xampp\htdocs\spectrum\public\index.php(35): Core\Router->dispatch('user')
+#1 {main}
+Throw in 'C:\xampp\htdocs\spectrum\Core\Router.php' on line 88
+//////////////////////////////////
+
+[17-Sep-2020 04:07:24 Europe/Berlin] Uncaught exception: 'Exception' with message: 'No route match.'
+Stack trace: #0 C:\xampp\htdocs\spectrum\public\index.php(35): Core\Router->dispatch('user')
+#1 {main}
+Throw in 'C:\xampp\htdocs\spectrum\Core\Router.php' on line 88
+//////////////////////////////////
+
+[17-Sep-2020 04:07:46 Europe/Berlin] Uncaught exception: 'Exception' with message: 'No route match.'
+Stack trace: #0 C:\xampp\htdocs\spectrum\public\index.php(35): Core\Router->dispatch('user')
+#1 {main}
+Throw in 'C:\xampp\htdocs\spectrum\Core\Router.php' on line 88
+//////////////////////////////////
+
+[17-Sep-2020 04:07:48 Europe/Berlin] Uncaught exception: 'Exception' with message: 'No route match.'
+Stack trace: #0 C:\xampp\htdocs\spectrum\public\index.php(35): Core\Router->dispatch('user')
+#1 {main}
+Throw in 'C:\xampp\htdocs\spectrum\Core\Router.php' on line 88
+//////////////////////////////////
+
+[17-Sep-2020 04:07:55 Europe/Berlin] Uncaught exception: 'Exception' with message: 'No route match.'
+Stack trace: #0 C:\xampp\htdocs\spectrum\public\index.php(35): Core\Router->dispatch('user')
+#1 {main}
+Throw in 'C:\xampp\htdocs\spectrum\Core\Router.php' on line 88
+//////////////////////////////////
+

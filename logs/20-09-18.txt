@@ -1,0 +1,130 @@
+[18-Sep-2020 06:19:18 Europe/Berlin] Uncaught exception: 'Exception' with message: 'No route match.'
+Stack trace: #0 C:\xampp\htdocs\spectrum\public\index.php(36): Core\Router->dispatch('user')
+#1 {main}
+Throw in 'C:\xampp\htdocs\spectrum\Core\Router.php' on line 88
+//////////////////////////////////
+
+[18-Sep-2020 06:25:01 Europe/Berlin] Uncaught exception: 'ErrorException' with message: 'Undefined variable: id'
+Stack trace: #0 C:\xampp\htdocs\spectrum\App\Controllers\Profile.php(22): Core\Error::errorHandler(8, 'Undefined varia...', 'C:\\xampp\\htdocs...', 22, Array)
+#1 [internal function]: App\Controllers\Profile->anotherAction()
+#2 C:\xampp\htdocs\spectrum\Core\Controller.php(19): call_user_func_array(Array, Array)
+#3 C:\xampp\htdocs\spectrum\Core\Router.php(76): Core\Controller->__call('another', Array)
+#4 C:\xampp\htdocs\spectrum\public\index.php(36): Core\Router->dispatch('profile/1')
+#5 {main}
+Throw in 'C:\xampp\htdocs\spectrum\App\Controllers\Profile.php' on line 22
+//////////////////////////////////
+
+[18-Sep-2020 06:28:32 Europe/Berlin] Uncaught exception: 'ErrorException' with message: 'Undefined variable: id'
+Stack trace: #0 C:\xampp\htdocs\spectrum\App\Controllers\Profile.php(22): Core\Error::errorHandler(8, 'Undefined varia...', 'C:\\xampp\\htdocs...', 22, Array)
+#1 [internal function]: App\Controllers\Profile->anotherAction()
+#2 C:\xampp\htdocs\spectrum\Core\Controller.php(19): call_user_func_array(Array, Array)
+#3 C:\xampp\htdocs\spectrum\Core\Router.php(76): Core\Controller->__call('another', Array)
+#4 C:\xampp\htdocs\spectrum\public\index.php(36): Core\Router->dispatch('profile/another...')
+#5 {main}
+Throw in 'C:\xampp\htdocs\spectrum\App\Controllers\Profile.php' on line 22
+//////////////////////////////////
+
+[18-Sep-2020 06:30:49 Europe/Berlin] Uncaught exception: 'ErrorException' with message: 'Undefined variable: id'
+Stack trace: #0 C:\xampp\htdocs\spectrum\App\Controllers\Profile.php(22): Core\Error::errorHandler(8, 'Undefined varia...', 'C:\\xampp\\htdocs...', 22, Array)
+#1 [internal function]: App\Controllers\Profile->anotherAction()
+#2 C:\xampp\htdocs\spectrum\Core\Controller.php(19): call_user_func_array(Array, Array)
+#3 C:\xampp\htdocs\spectrum\Core\Router.php(76): Core\Controller->__call('another', Array)
+#4 C:\xampp\htdocs\spectrum\public\index.php(36): Core\Router->dispatch('profile/12/anot...')
+#5 {main}
+Throw in 'C:\xampp\htdocs\spectrum\App\Controllers\Profile.php' on line 22
+//////////////////////////////////
+
+[18-Sep-2020 06:33:02 Europe/Berlin] Uncaught exception: 'Exception' with message: 'No route match.'
+Stack trace: #0 C:\xampp\htdocs\spectrum\public\index.php(36): Core\Router->dispatch('profile/')
+#1 {main}
+Throw in 'C:\xampp\htdocs\spectrum\Core\Router.php' on line 88
+//////////////////////////////////
+
+[18-Sep-2020 06:33:11 Europe/Berlin] Uncaught exception: 'Exception' with message: 'No route match.'
+Stack trace: #0 C:\xampp\htdocs\spectrum\public\index.php(36): Core\Router->dispatch('profile/')
+#1 {main}
+Throw in 'C:\xampp\htdocs\spectrum\Core\Router.php' on line 88
+//////////////////////////////////
+
+[18-Sep-2020 06:52:49 Europe/Berlin] Uncaught exception: 'ErrorException' with message: 'Undefined index: post'
+Stack trace: #0 C:\xampp\htdocs\spectrum\App\Controllers\Messages.php(11): Core\Error::errorHandler(8, 'Undefined index...', 'C:\\xampp\\htdocs...', 11, Array)
+#1 [internal function]: App\Controllers\Messages->transferAction()
+#2 C:\xampp\htdocs\spectrum\Core\Controller.php(19): call_user_func_array(Array, Array)
+#3 C:\xampp\htdocs\spectrum\Core\Router.php(76): Core\Controller->__call('transfer', Array)
+#4 C:\xampp\htdocs\spectrum\public\index.php(41): Core\Router->dispatch('messages')
+#5 {main}
+Throw in 'C:\xampp\htdocs\spectrum\App\Controllers\Messages.php' on line 11
+//////////////////////////////////
+
+[18-Sep-2020 06:57:47 Europe/Berlin] Uncaught exception: 'Twig\Error\SyntaxError' with message: 'Multiple extends tags are forbidden.'
+Stack trace: #0 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Parser.php(182): Twig\TokenParser\ExtendsTokenParser->parse(Object(Twig\Token))
+#1 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Parser.php(95): Twig\Parser->subparse(NULL, false)
+#2 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(479): Twig\Parser->parse(Object(Twig\TokenStream))
+#3 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(507): Twig\Environment->parse(Object(Twig\TokenStream))
+#4 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(348): Twig\Environment->compileSource(Object(Twig\Source))
+#5 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(309): Twig\Environment->loadTemplate('__TwigTemplate_...', 'Home/user.html')
+#6 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(277): Twig\Environment->load('Home/user.html')
+#7 C:\xampp\htdocs\spectrum\Core\View.php(32): Twig\Environment->render('Home/user.html', Array)
+#8 C:\xampp\htdocs\spectrum\App\Controllers\Home.php(18): Core\view::renderTemplate('Home/user.html')
+#9 [internal function]: App\Controllers\Home->userAction()
+#10 C:\xampp\htdocs\spectrum\Core\Controller.php(19): call_user_func_array(Array, Array)
+#11 C:\xampp\htdocs\spectrum\Core\Router.php(76): Core\Controller->__call('user', Array)
+#12 C:\xampp\htdocs\spectrum\public\index.php(41): Core\Router->dispatch('home')
+#13 {main}
+Throw in 'C:\xampp\htdocs\spectrum\App\Views\Home\user.html' on line 5
+//////////////////////////////////
+
+[18-Sep-2020 07:00:46 Europe/Berlin] Uncaught exception: 'Twig\Error\SyntaxError' with message: 'Unexpected token "string" of value "navbar.html" ("end of print statement" expected).'
+Stack trace: #0 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Parser.php(140): Twig\TokenStream->expect(4)
+#1 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Parser.php(95): Twig\Parser->subparse(NULL, false)
+#2 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(479): Twig\Parser->parse(Object(Twig\TokenStream))
+#3 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(507): Twig\Environment->parse(Object(Twig\TokenStream))
+#4 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(348): Twig\Environment->compileSource(Object(Twig\Source))
+#5 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(309): Twig\Environment->loadTemplate('__TwigTemplate_...', 'Home/user.html')
+#6 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(277): Twig\Environment->load('Home/user.html')
+#7 C:\xampp\htdocs\spectrum\Core\View.php(32): Twig\Environment->render('Home/user.html', Array)
+#8 C:\xampp\htdocs\spectrum\App\Controllers\Home.php(18): Core\view::renderTemplate('Home/user.html')
+#9 [internal function]: App\Controllers\Home->userAction()
+#10 C:\xampp\htdocs\spectrum\Core\Controller.php(19): call_user_func_array(Array, Array)
+#11 C:\xampp\htdocs\spectrum\Core\Router.php(76): Core\Controller->__call('user', Array)
+#12 C:\xampp\htdocs\spectrum\public\index.php(41): Core\Router->dispatch('home')
+#13 {main}
+Throw in 'C:\xampp\htdocs\spectrum\App\Views\Home\user.html' on line 5
+//////////////////////////////////
+
+[18-Sep-2020 07:00:49 Europe/Berlin] Uncaught exception: 'Twig\Error\SyntaxError' with message: 'Unexpected token "string" of value "navbar.html" ("end of print statement" expected).'
+Stack trace: #0 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Parser.php(140): Twig\TokenStream->expect(4)
+#1 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Parser.php(95): Twig\Parser->subparse(NULL, false)
+#2 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(479): Twig\Parser->parse(Object(Twig\TokenStream))
+#3 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(507): Twig\Environment->parse(Object(Twig\TokenStream))
+#4 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(348): Twig\Environment->compileSource(Object(Twig\Source))
+#5 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(309): Twig\Environment->loadTemplate('__TwigTemplate_...', 'Home/user.html')
+#6 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(277): Twig\Environment->load('Home/user.html')
+#7 C:\xampp\htdocs\spectrum\Core\View.php(32): Twig\Environment->render('Home/user.html', Array)
+#8 C:\xampp\htdocs\spectrum\App\Controllers\Home.php(18): Core\view::renderTemplate('Home/user.html')
+#9 [internal function]: App\Controllers\Home->userAction()
+#10 C:\xampp\htdocs\spectrum\Core\Controller.php(19): call_user_func_array(Array, Array)
+#11 C:\xampp\htdocs\spectrum\Core\Router.php(76): Core\Controller->__call('user', Array)
+#12 C:\xampp\htdocs\spectrum\public\index.php(41): Core\Router->dispatch('home')
+#13 {main}
+Throw in 'C:\xampp\htdocs\spectrum\App\Views\Home\user.html' on line 5
+//////////////////////////////////
+
+[18-Sep-2020 07:00:50 Europe/Berlin] Uncaught exception: 'Twig\Error\SyntaxError' with message: 'Unexpected token "string" of value "navbar.html" ("end of print statement" expected).'
+Stack trace: #0 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Parser.php(140): Twig\TokenStream->expect(4)
+#1 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Parser.php(95): Twig\Parser->subparse(NULL, false)
+#2 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(479): Twig\Parser->parse(Object(Twig\TokenStream))
+#3 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(507): Twig\Environment->parse(Object(Twig\TokenStream))
+#4 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(348): Twig\Environment->compileSource(Object(Twig\Source))
+#5 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(309): Twig\Environment->loadTemplate('__TwigTemplate_...', 'Home/user.html')
+#6 C:\xampp\htdocs\spectrum\vendor\twig\twig\src\Environment.php(277): Twig\Environment->load('Home/user.html')
+#7 C:\xampp\htdocs\spectrum\Core\View.php(32): Twig\Environment->render('Home/user.html', Array)
+#8 C:\xampp\htdocs\spectrum\App\Controllers\Home.php(18): Core\view::renderTemplate('Home/user.html')
+#9 [internal function]: App\Controllers\Home->userAction()
+#10 C:\xampp\htdocs\spectrum\Core\Controller.php(19): call_user_func_array(Array, Array)
+#11 C:\xampp\htdocs\spectrum\Core\Router.php(76): Core\Controller->__call('user', Array)
+#12 C:\xampp\htdocs\spectrum\public\index.php(41): Core\Router->dispatch('home')
+#13 {main}
+Throw in 'C:\xampp\htdocs\spectrum\App\Views\Home\user.html' on line 5
+//////////////////////////////////
+

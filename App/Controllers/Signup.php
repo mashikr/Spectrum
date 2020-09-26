@@ -12,14 +12,6 @@ use \App\Models\User;
  */
 class Signup extends \Core\Controller
 {
-  /**
-   * Show the signup page
-   *
-   * @return void
-   */
-  public function newAction() {
-      View::renderTemplate('Signup/new.html');
-  }
 
   public function createAction() {
       $newUser = new User($_POST);
