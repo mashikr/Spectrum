@@ -26,8 +26,20 @@ class User extends \Core\Model {
                 $hashed_token = $token->getHash();
                 $active_token = $token->getValue();
 
+                if ($this->gender == 'Male') {
+                    $profile_pic = 'male-user.png';
+                } else {
+                    $profile_pic = 'female-user.png';
+                }
+
+                $cover_pic = 'dark-bg.jpg';
+
+                $this->dob = date_format(date_create($this->dob),"d M, Y");
+                $this->firstname = ucwords(strtolower($this->firstname));
+                $this->lastname = ucwords(strtolower($this->lastname));
+ 
                 $this->password = password_hash($this->password, PASSWORD_DEFAULT);
-                $sql = "INSERT INTO `users`(`firstname`, `lastname`, `email`,`dob`, `gender`, `password`, `account_active_hash`) VALUES (:firstname, :lastname, :email, :dob, :gender, :password, :active_hash)";
+                $sql = "INSERT INTO `users`(`firstname`, `lastname`, `email`,`dob`, `gender`, `password`, `account_active_hash`,`profile_pic`,`cover_pic`) VALUES (:firstname, :lastname, :email, :dob, :gender, :password, :active_hash, :profile_pic, :cover_pic)";
 
                 $db = static::getDB();
                 $stmt = $db->prepare($sql);
@@ -39,6 +51,8 @@ class User extends \Core\Model {
                 $stmt->bindValue(':gender', $this->gender, PDO::PARAM_STR);
                 $stmt->bindValue(':password', $this->password, PDO::PARAM_STR);
                 $stmt->bindValue(':active_hash', $hashed_token, PDO::PARAM_STR);
+                $stmt->bindValue(':profile_pic', $profile_pic, PDO::PARAM_STR);
+                $stmt->bindValue(':cover_pic', $cover_pic, PDO::PARAM_STR);
                 
                 if ($this->sendActivateEmail($active_token, $this->email)) {
                     return $stmt->execute();
@@ -88,6 +102,9 @@ class User extends \Core\Model {
             $this->errors['dob'] = 'User age need 10+ year';
         }
 
+        if (!$this->gender) {
+            $this->errors['gender'] = 'This field is required';
+        }
 
         if ($this->password != $this->confirm_password) {
             $this->errors['confirm_password'] = 'Password do not match';
@@ -156,6 +173,12 @@ class User extends \Core\Model {
         }
 
         return false;
+    }
+
+    public static function getFriendList() {
+        $user = static::findByEmail($_SESSION['user']['email']);
+
+        return $user->friends;
     }
 
     public static function rememberLogin($id, $email) {

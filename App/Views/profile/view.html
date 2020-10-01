@@ -8,11 +8,11 @@
 <div style="height: 3.78rem;"></div>
 <div class="container profile-div pb-4">
 
-    <div style="background-image: url('{{ folder }}/public/img/ashik-c.JPG');" class="position-relative profile-cover-pic pointer">
+    <div style="background-image: url('{{ folder }}/public/img/{{ user.cover_pic }}');" class="position-relative profile-cover-pic pointer">
         <!-- <img src="{{ folder }}/public/img/ashik-c.JPG" alt="Ashik" class="img-fluid rounded"> -->
         <div class="profile-img">
             <div class="profile-img-overlay">
-                <a href="#"><img src="{{ folder }}/public/img/ashik.JPG" alt=""></a>
+                <a href="#"><img src="{{ folder }}/public/img/{{ user.profile_pic }}" alt=""></a>
                 <div class="profile-pic-update-btn"><i class="fas fa-camera"></i></div>
             </div>
         </div>
@@ -32,9 +32,11 @@
           </button>
         </div>
         <div class="modal-body">
-          <form>
+          <form id="update-photo-form">
               <label class="btn btn-primary" for="update-photo"><h6 class="m-0"><i class="fas fa-plus"></i> Upload a photo</h6></label> <hr>
               <input type="file" class="d-none" name="image" id="update-photo">
+              <input type="hidden" name="type" value="test" id="photo-type">
+        </form>
               Select a photo:
               <div class="row mt-2">
                   <div class="col-4 py-2">
@@ -47,14 +49,13 @@
                     <a href="#"><img src="{{ folder }}/public/img/ashik.JPG" class="img-fluid rounded" alt="Ashik"></a>
                   </div>
               </div>
-          </form>
         </div>
       </div>
     </div>
   </div>
 <!-- Modal end -->
 
-    <h3 class="text-center text-dark my-4">Md Ashikur Rahman</h3>
+    <h3 class="text-center text-dark my-4">{{ user.name }}</h3>
 
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -64,7 +65,7 @@
           <a class="nav-link" id="about-tab" data-toggle="tab" href="#about" role="tab" aria-controls="about" aria-selected="false">About</a>
         </li>
         <li class="nav-item" role="presentation">
-          <a class="nav-link" id="friends-tab" data-toggle="tab" href="#friends" role="tab" aria-controls="friends" aria-selected="false">Friends (10)</a>
+          <a class="nav-link" id="friends-tab" data-toggle="tab" href="#friends" role="tab" aria-controls="friends" aria-selected="false">Friends ({{ countFriend }})</a>
         </li>
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="photos-tab" data-toggle="tab" href="#photos" role="tab" aria-controls="photos" aria-selected="false">Photos</a>
@@ -73,98 +74,58 @@
 
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="timeline" role="tabpanel" aria-labelledby="timeline-tab">
-
-            <div class="bg-light p-3 mt-2">
-                <form action="posts/add" method="post">
-                    <textarea class="form-control" name="post">Share Something....</textarea>
-                <div class="d-flex mt-2 justify-content-between">
-                    <div class="custom-file w-50">
-                        <label class="custom-file-label" for="customFile">Add image or file</label>
-                        <input type="file" class="custom-file-input" id="customFile">
+            {% if flash_msg.type == 'success' %}        
+                    <div class="alert alert-success alert-dismissable mt-2">
+                        <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                        {{ flash_msg.msg }}
                     </div>
-                    <select class="custom-select w-25" title="Privacy">
-                        <option value="Friends">Friends</option>
-                        <option value="Public">Public</option>
-                        <option value="Private">Private</option>
-                      </select>
-                    <input type="submit" class="btn btn-primary" name="submit" value="Post">
-                </div>
+                {% endif %}
+                {% if flash_msg.type == 'failed'%}
+                    <div class="alert alert-danger alert-dismissable mt-2">
+                        <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                        {{ flash_msg.msg }}
+                    </div>
+                {% endif %}
+            <div class="bg-light p-3 mt-2">
+                <!-- post form start-->
+                <form action="posts/add" method="post" enctype="multipart/form-data">
+                    <textarea class="form-control" name="post" placeholder="Share Something...."></textarea>
+                    <div class="d-flex mt-2 justify-content-between">
+                        <div class="custom-file w-50">
+                            <label class="custom-file-label" for="customFile">Add image or file</label>
+                            <input type="file" name="post-file" class="custom-file-input" id="customFile">
+                        </div>
+                        <select class="custom-select w-25" name="privacy" title="Privacy">
+                            <option value="Public">Public</option>
+                            <option value="Friends">Friends</option>
+                            <option value="Private">Private</option>
+                        </select>
+                        <input type="hidden" name="timeline" value="1">
+                        <input type="submit" class="btn btn-primary" name="submit" value="Post">
+                    </div>
                 </form>
+                 <!-- post form end-->
             </div>
 
             <hr>
             
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex align-items-center"> 
-                        <div class="profile-icon-img-overlay mr-2">
-                            <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-                        </div>
-                        <div class="d-flex flex-column">
-                           <a href="#">Ashikur Rahman</a>
-                           <small class="text-muted">1 hour ago <i class="fas fa-user-friends ml-2"></i></small>
-                        </div>
-                    </div>
-                    <div class="post-content mt-2">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum facilis mollitia quas. Nostrum, labore iusto, doloribus provident voluptatum alias veniam voluptas accusantium ea eum ut magnam nulla quia rem debitis.
-
-                        <img src="{{ folder }}/public/img/bg-img.jpg" class="img-fluid mt-2" alt="">
-                    </div>
-                    <div class="d-flex justify-content-between mt-2">
-                        <a href="#">20 Likes</a>
-                        <a href="#">30 Comments</a>
-                    </div>
-                    <hr class="m-0">
-                    <div class="d-flex mt-2 align-items-start">
-                        <div class="btn btn-sm w-100 btn-light mr-3"><i class="far fa-thumbs-up"></i> Like</div>
-                        <div class="btn btn-sm w-100 btn-light"><i class="far fa-comment-alt"></i> Comment</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex align-items-center"> 
-                        <div class="profile-icon-img-overlay mr-2">
-                            <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-                        </div>
-                        <div class="d-flex flex-column">
-                           <a href="#">Ashikur Rahman</a>
-                           <small class="text-muted">1 hour ago <i class="fas fa-user-friends ml-2"></i></small>
-                        </div>
-                    </div>
-                    <div class="post-content mt-2">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum facilis mollitia quas. Nostrum, labore iusto, doloribus provident voluptatum alias veniam voluptas accusantium ea eum ut magnam nulla quia rem debitis.
-
-                        <img src="{{ folder }}/public/img/logo-text-dark.png" class="img-fluid mt-2" alt="">
-                    </div>
-                    <div class="d-flex justify-content-between mt-2">
-                        <a href="#">20 Likes</a>
-                        <a href="#">30 Comments</a>
-                    </div>
-                    <hr class="m-0">
-                    <div class="d-flex mt-2 align-items-start">
-                        <div class="btn btn-sm w-100 btn-light mr-3"><i class="far fa-thumbs-up"></i> Like</div>
-                        <div class="btn btn-sm w-100 btn-light"><i class="far fa-comment-alt"></i> Comment</div>
-                    </div>
-                </div>
-            </div>
+            {{ include ("posts.html") }}
             
         </div>
         <div class="tab-pane fade p-3 text-muted" id="about" role="tabpanel" aria-labelledby="about-tab">
             
             <div class="row">
                 <div class="col-4"><i class="fas fa-briefcase"></i> <b>Works at </b></div> 
-                <div class="col" id="worksAt">
-                    Class Representative of 12th Batch at Department of Computer Science and Telecommunication Engineering, NSTU
+                <div class="col" id="works-At">
+                    {{ user.works_at }}
                 </div>
-                <div class="col-1"><i data-target="worksAt" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
+                <div class="col-1"><i data-target="works-At" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
             </div>
             <hr>
             <div class="row">
                 <div class="col-4"><i class="fas fa-graduation-cap"></i> <b>Studied</b> </div> 
                 <div class="col" id="studied">
-                    Computer Science & Telecommunication Engineering at Noakhali Science and Technology University
+                    {{ user.studied }}
                 </div>
                 <div class="col-1"><i data-target="studied" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
             </div>
@@ -172,7 +133,7 @@
             <div class="row">
                 <div class="col-4"><i class="fas fa-home"></i> <b>Lives in</b> </div>
                 <div class="col" id="lives-In">
-                    Noakhali, Chittagong, Bangladesh
+                    {{ user.live_in }}
                 </div>
                 <div class="col-1"><i data-target="lives-In" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
             </div>
@@ -180,7 +141,7 @@
             <div class="row">
                 <div class="col-4"><i  class="fas fa-map-marker-alt"></i> <b>Home town</b> </div>
                 <div class="col" id="home-Town">
-                    Laksam, Cumilla
+                    {{ user.home_town }}
                 </div>
                 <div class="col-1"><i data-target="home-Town" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
             </div>
@@ -188,7 +149,7 @@
             <div class="row">
                 <div class="col-4"><i class="fas fa-phone-alt"></i> <b>Phone no</b> </div>
                 <div class="col" id="phone-No">
-                    01712327242                    
+                    {{ user.phone }}                   
                 </div>
                 <div class="col-1"><i data-target="phone-No" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
             </div>
@@ -196,21 +157,21 @@
             <div class="row">
                 <div class="col-4"><i class="fas fa-envelope"></i> <b>Email</b> </div>
                 <div class="col">
-                    ashik@gmail.com
+                    {{ user.email }}
                 </div>
             </div>
             <hr>
             <div class="row">
                 <div class="col-4"><i class="fas fa-birthday-cake"></i> <b>Birth Date</b> </div>
                 <div class="col">
-                    12 Sep, 1998
+                    {{ user.dob }}
                 </div>
             </div>
             <hr>
             <div class="row">
                 <div class="col-4"><i class="fas fa-venus-mars"></i> <b>Gender</b> </div>
                 <div class="col">
-                    Male
+                    {{ user.gender }}
                 </div>
             </div>
         </div>
@@ -322,4 +283,7 @@
       </div>
 
 </div>
+{% endblock %}
+{% block footer %} 
+<script src="{{ folder }}/public/js/profile.js"></script>
 {% endblock %}

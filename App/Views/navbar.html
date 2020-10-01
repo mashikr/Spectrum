@@ -18,7 +18,7 @@
 
             <li class="nav-item d-md-none">
                 <a href="{{ url_root }}/profile" title="Profile" class="nav-link d-flex align-items-center"> 
-                    <div class="profile-icon-img-overlay-link mr-2"><img src="{{ folder }} /public/img/male-user.png" alt="user Icon"></div> Ashikur Rahman
+                    <div class="profile-icon-img-overlay-link mr-2"><img src="{{ folder }} /public/img/{{ user.profile_pic }}" alt="user Icon"></div> {{ user.name }}
                 </a>
             </li>
 
@@ -27,90 +27,95 @@
             </li>
 
             
-            <li class="nav-item d-md-none  pointer">
-                <a class="nav-link" href="{{ url_root }}/findfriends" title="Friend Request"><i class="fas fa-user-friends"></i><sup class="badge badge-danger">23</sup></a>
-            </li>
-            <li class="nav-item d-none d-md-block position-relative  pointer">
-                <span class="nav-link pointer" title="Friend Request" id="friend-request"><i class="fas fa-user-friends"></i><sup class="badge badge-danger">23</sup></span>
+            {% if page != 'findfriends' %}
+                <li class="nav-item d-md-none  pointer">
+                    <a class="nav-link" href="{{ url_root }}/findfriends" title="Friend Request"><i class="fas fa-user-friends"></i><sup class="badge badge-danger">23</sup></a>
+                </li>
+                <li class="nav-item d-none d-md-block position-relative  pointer">
+                    <span class="nav-link pointer" title="Friend Request" id="friend-request"><i class="fas fa-user-friends"></i><sup class="badge badge-danger">23</sup></span>
 
-                <div class="d-flex flex-column p-2 bg-primary rounded shadow" id="friend-request-dropdown">
-                    <a href="#" class="btn btn-light mb-1">
-                        <div class="profile-icon-img-overlay mr-2 float-left">
-                            <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-                        </div> 
-                       <div class="text-left ml-5"><b>Ashikur</b> send you a friend request. <br>
-                            <small class="text-muted ml-2">1 hour ago</small>
-                        </div>
-                    </a>
-                    <a href="#" class="btn btn-light mb-1">
-                        <div class="profile-icon-img-overlay mr-2 float-left">
-                            <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-                        </div> 
-                        <div class="text-left ml-5"><b>Ashikur Rahman</b> send you a friend request. <br>
-                            <small class="text-muted ml-2">1 hour ago</small>
-                        </div>
-                    </a>
-                   
-                </div>
-            </li>
-
+                    <div class="d-flex flex-column p-2 bg-primary rounded shadow" id="friend-request-dropdown">
+                        <a href="#" class="btn btn-light mb-1">
+                            <div class="profile-icon-img-overlay mr-2 float-left">
+                                <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
+                            </div> 
+                        <div class="text-left ml-5"><b>Ashikur</b> send you a friend request. <br>
+                                <small class="text-muted ml-2">1 hour ago</small>
+                            </div>
+                        </a>
+                        <a href="#" class="btn btn-light mb-1">
+                            <div class="profile-icon-img-overlay mr-2 float-left">
+                                <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
+                            </div> 
+                            <div class="text-left ml-5"><b>Ashikur Rahman</b> send you a friend request. <br>
+                                <small class="text-muted ml-2">1 hour ago</small>
+                            </div>
+                        </a>
+                    
+                    </div>
+                </li>
+            {% endif %}
            
 
 
+            
+            {% if page != 'messages' %}
+                <li class="nav-item d-md-none  pointer">
+                    <a class="nav-link" href="{{ url_root }}/messages" title="Messages"><i class="far fa-comments"></i><sup class="badge badge-danger">6</sup></a>
+                </li>
+                <li class="nav-item d-none d-md-block position-relative  pointer">
+                    <span class="nav-link pointer" title="Messages" id="messages"><i class="far fa-comments"></i><sup class="badge badge-danger">5</sup></span>
+                    
+                    <div class="d-flex flex-column p-2 bg-primary rounded shadow" id="messages-dropdown">
+                        <span class="btn btn-light mb-1 message-link" data-id="1">
+                            <div class="profile-icon-img-overlay mr-2 float-left">
+                                <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
+                            </div> 
+                        <div class="text-left"><b>Ashikur Rahman</b><span class="badge badge-danger float-right">5</span><br>
+                                <small class="text-muted">1 hour ago</small>
+                            </div>
+                        </span>
+                        <span class="btn btn-light mb-1 message-link" data-id="2">
+                            <div class="profile-icon-img-overlay mr-2 float-left">
+                                <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
+                            </div> 
+                            <div class="text-left"><b>Ashikur</b><span class="badge badge-danger float-right">5</span><br>
+                                <small class="text-muted">1 hour ago</small>
+                            </div>
+                        </span>
+                    
+                    </div>
+                </li>
+            {% endif %}
 
-            <li class="nav-item d-md-none  pointer">
-                <a class="nav-link" href="{{ url_root }}/messages" title="Messages"><i class="far fa-comments"></i><sup class="badge badge-danger">6</sup></a>
-            </li>
-            <li class="nav-item d-none d-md-block position-relative  pointer">
-                <span class="nav-link pointer" title="Messages" id="messages"><i class="far fa-comments"></i><sup class="badge badge-danger">5</sup></span>
-                
-                <div class="d-flex flex-column p-2 bg-primary rounded shadow" id="messages-dropdown">
-                    <span class="btn btn-light mb-1 message-link" data-id="1">
-                        <div class="profile-icon-img-overlay mr-2 float-left">
-                            <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-                        </div> 
-                       <div class="text-left"><b>Ashikur Rahman</b><span class="badge badge-danger float-right">5</span><br>
-                            <small class="text-muted">1 hour ago</small>
-                        </div>
-                    </span>
-                    <span class="btn btn-light mb-1 message-link" data-id="2">
-                        <div class="profile-icon-img-overlay mr-2 float-left">
-                            <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-                        </div> 
-                        <div class="text-left"><b>Ashikur</b><span class="badge badge-danger float-right">5</span><br>
-                            <small class="text-muted">1 hour ago</small>
-                        </div>
-                    </span>
-                   
-                </div>
-            </li>
+            {% if page != 'notification' %}
+                <li class="nav-item d-md-none  pointer">
+                    <a class="nav-link" href="{{ url_root }}/notification" title="Notification"><i class="fas fa-bell"></i><sup class="badge badge-danger">6</sup></a>
+                </li>
+                <li class="nav-item d-none d-md-block position-relative pointer">
+                    <span class="nav-link" title="Notification" id="notification"><i class="fas fa-bell"></i><sup class="badge badge-danger">5</sup></span>
 
-            <li class="nav-item d-md-none  pointer">
-                <a class="nav-link" href="{{ url_root }}/notification" title="Notification"><i class="fas fa-bell"></i><sup class="badge badge-danger">6</sup></a>
-            </li>
-            <li class="nav-item d-none d-md-block position-relative pointer">
-                <span class="nav-link" title="Notification" id="notification"><i class="fas fa-bell"></i><sup class="badge badge-danger">5</sup></span>
-
-                <div class="d-flex flex-column p-2 bg-primary rounded shadow" id="notification-dropdown">
-                    <a href="#" class="btn btn-light mb-1">
-                        <div class="profile-icon-img-overlay d-block mr-2 float-left">
-                            <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-                        </div> 
-                        <div class="text-left ml-5"><b>Ashikur Rahman</b> likes your post. <br>
-                            <small class="text-muted ml-1">1 hour ago</small>
-                        </div>
-                    </a>
-                    <a href="#" class="btn btn-light mb-1">
-                        <div class="profile-icon-img-overlay d-block mr-2 float-left">
-                            <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-                        </div> 
-                        <div class="text-left ml-5"><b>Ashikur Rahman</b> commented on your post. <br>
-                            <small class="text-muted ml-1">1 hour ago</small>
-                        </div>
-                    </a>
-                   
-                </div>
-            </li>
+                    <div class="d-flex flex-column p-2 bg-primary rounded shadow" id="notification-dropdown">
+                        <a href="#" class="btn btn-light mb-1">
+                            <div class="profile-icon-img-overlay d-block mr-2 float-left">
+                                <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
+                            </div> 
+                            <div class="text-left ml-5"><b>Ashikur Rahman</b> likes your post. <br>
+                                <small class="text-muted ml-1">1 hour ago</small>
+                            </div>
+                        </a>
+                        <a href="#" class="btn btn-light mb-1">
+                            <div class="profile-icon-img-overlay d-block mr-2 float-left">
+                                <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
+                            </div> 
+                            <div class="text-left ml-5"><b>Ashikur Rahman</b> commented on your post. <br>
+                                <small class="text-muted ml-1">1 hour ago</small>
+                            </div>
+                        </a>
+                    
+                    </div>
+                </li>
+            {% endif %}
 
             <li class="nav-item  pointer">
                 <a class="nav-link" href="{{ url_root }}/logout" title="Logout"><i class="fas fa-sign-out-alt"></i></a>
@@ -119,6 +124,13 @@
         </div>
     </div>
   </nav>
+
+  <!-- flash msg show -->
+  <div id="failed-msg">
+      <div class="alert alert-danger">
+        <strong>Something wrong!</strong>
+      </div>
+  </div>
 
   <!-- messages toast -->
   <div class="toast bg-white" id="msg-toast">
@@ -152,22 +164,7 @@
             <div class="p-1 position-relative pointer" id="toast-emoji">
                 <i class="far fa-grin chat-emoji" data-target="toast-emoji"></i>
                 <div class="chat-emoji-body d-none rounded p-2 shadow">
-                    <img src="{{ folder }}/public/emoji/emoji-1.png" alt="imoji-1" class="emoji">
-                    <img src="{{ folder }}/public/emoji/emoji-2.png" alt="imoji-2" class="emoji">
-                    <img src="{{ folder }}/public/emoji/emoji-3.png" alt="imoji-3" class="emoji">
-                    <img src="{{ folder }}/public/emoji/emoji-4.png" alt="imoji-4" class="emoji">
-                    <img src="{{ folder }}/public/emoji/emoji-5.png" alt="imoji-5" class="emoji">
-                    <img src="{{ folder }}/public/emoji/emoji-6.png" alt="imoji-6" class="emoji">
-                    <img src="{{ folder }}/public/emoji/emoji-7.png" alt="imoji-7" class="emoji">
-                    <img src="{{ folder }}/public/emoji/emoji-8.png" alt="imoji-8" class="emoji">
-                    <img src="{{ folder }}/public/emoji/emoji-9.png" alt="imoji-9" class="emoji">
-                    <img src="{{ folder }}/public/emoji/emoji-10.png" alt="imoji-10" class="emoji">
-                    <img src="{{ folder }}/public/emoji/emoji-11.png" alt="imoji-11" class="emoji">
-                    <img src="{{ folder }}/public/emoji/emoji-12.png" alt="imoji-12" class="emoji">
-                    <img src="{{ folder }}/public/emoji/emoji-13.png" alt="imoji-13" class="emoji">
-                    <img src="{{ folder }}/public/emoji/emoji-14.png" alt="imoji-14" class="emoji">
-                    <img src="{{ folder }}/public/emoji/emoji-15.png" alt="imoji-15" class="emoji">
-                    <img src="{{ folder }}/public/emoji/emoji-16.png" alt="imoji-16" class="emoji">
+                    
                 </div> 
             </div>
 

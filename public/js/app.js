@@ -1,6 +1,24 @@
 $(document).ready(function() {
+    var emojis = `
+            <img src="/spectrum/public/emoji/emoji-1.png" alt="imoji-1" class="emoji">
+            <img src="/spectrum/public/emoji/emoji-2.png" alt="imoji-2" class="emoji">
+            <img src="/spectrum/public/emoji/emoji-3.png" alt="imoji-3" class="emoji">
+            <img src="/spectrum/public/emoji/emoji-4.png" alt="imoji-4" class="emoji">
+            <img src="/spectrum/public/emoji/emoji-5.png" alt="imoji-5" class="emoji">
+            <img src="/spectrum/public/emoji/emoji-6.png" alt="imoji-6" class="emoji">
+            <img src="/spectrum/public/emoji/emoji-7.png" alt="imoji-7" class="emoji">
+            <img src="/spectrum/public/emoji/emoji-8.png" alt="imoji-8" class="emoji">
+            <img src="/spectrum/public/emoji/emoji-9.png" alt="imoji-9" class="emoji">
+            <img src="/spectrum/public/emoji/emoji-10.png" alt="imoji-10" class="emoji">
+            <img src="/spectrum/public/emoji/emoji-11.png" alt="imoji-11" class="emoji">
+            <img src="/spectrum/public/emoji/emoji-12.png" alt="imoji-12" class="emoji">
+            <img src="/spectrum/public/emoji/emoji-13.png" alt="imoji-13" class="emoji">
+            <img src="/spectrum/public/emoji/emoji-14.png" alt="imoji-14" class="emoji">
+            <img src="/spectrum/public/emoji/emoji-15.png" alt="imoji-15" class="emoji">
+            <img src="/spectrum/public/emoji/emoji-16.png" alt="imoji-16" class="emoji">
+    `;
 
-////// dropdown toggler
+    ////// dropdown toggler
     $('#friend-request').click(function() {
         $('#friend-request-dropdown').toggleClass('top-3');
         $('#messages-dropdown').removeClass('top-3');
@@ -19,6 +37,7 @@ $(document).ready(function() {
         $('#friend-request-dropdown').removeClass('top-3');
     });
 
+    /// body event listener ///////
     $('body').click(function(e) {
 
         if (!e.target.matches('#friend-request, #friend-request *') && !e.target.matches('#friend-request-dropdown, #friend-request-dropdown *')) {
@@ -38,9 +57,17 @@ $(document).ready(function() {
                 $('#notification-dropdown').removeClass('top-3');
             }
         }
+        if (!e.target.matches('.comment-emoji, .comment-emoji *')) {
+            $('.chat-emoji-body').addClass('d-none');
+        }
+
+        if (!e.target.matches('.post-option, .post-option *')) {
+            $('.post-option-dropdown').addClass('d-none');
+        }
 
 
-    })
+    });
+
 
     ////// chat toast toggle ////
     $('.message-link').click(function() {
@@ -55,63 +82,27 @@ $(document).ready(function() {
         $('#toast-emoji .chat-emoji-body').addClass('d-none');
     });
     
-    /// custom file name
-    $('.custom-file-input').change(function(e){
-        var fileName = e.target.files[0].name;
-        $('.custom-file-label').html(fileName);
-    });
-
-    /// image action ////
-    $('.image-action-toggler').click(function() {
-        var target = $(this).attr('data-img');
-
-        if ($('#' + target).css('display') == 'none') {
-            $('.dropdown-menu').hide();
-            $('#' + target).show();
-        } else {
-            $('#' + target).hide();
-        }
-    });
-
-    ///// profile photos update btn /////////
-
-    $('.profile-pic-update-btn').click(function() {
-        $('#photoUpdateModal').modal('show');
-        $('.modal-title').text('Update Profile Photo')
-
-    });
-
-    $('.cover-pic-update-btn').click(function() {
-        $('#photoUpdateModal').modal('show');
-        $('.modal-title').text('Update Cover Photo')
-
-    });
-
-    ///// update about /////////
-    $('.about-edit-btn').click(function() {
-        var target = $(this).attr('data-target');
-        
-        $('#aboutUpdateModal').modal('show');
-        $('#aboutUpdateModalTitle').text();
-        $('#aboutInput').val($('#'+target).text().trim());
-
-        $('#update-about-btn').click(function() {
-            console.log('test');
-        });
-    });
+   
 
     //// toggle emoji body ////
     $('.chat-emoji').click(function() {
         var target = $(this).attr('data-target');
-        if (target) {
-            $('#toast-emoji .chat-emoji-body').toggleClass('d-none');
+        if (target == 'toast-emoji') {
+            $('#toast-emoji .chat-emoji-body').html(emojis).toggleClass('d-none');
             $('#toast-emoji .emoji').off();
             $('#toast-emoji .emoji').click(function() {
                 console.log('toast');
                 console.log($(this).attr('src'));
             });
+        } else if(target == 'comment-emoji') {
+            $(this).parent().children('.chat-emoji-body').html(emojis).toggleClass('d-none');
+            $(this).parent().children('.chat-emoji-body').children('.emoji').off();
+            $(this).parent().children('.chat-emoji-body').children('.emoji').click(function() {
+                console.log('comment');
+                console.log($(this).attr('src'));
+            });
         } else {
-            $('#msg-chat-emoji .chat-emoji-body').toggleClass('d-none');
+            $('#msg-chat-emoji .chat-emoji-body').html(emojis).toggleClass('d-none');
             $('#msg-chat-emoji .emoji').off();
             $('#msg-chat-emoji .emoji').click(function() {
                 console.log('chat');
@@ -121,15 +112,12 @@ $(document).ready(function() {
             
     });
 
+    //// flash msg fade out //////
+    $('.alert-dismissable').fadeOut(5000);
+
     /// tost chat body scroll ///
    function scrollToastChatBody() {
         $('#chat-body').scrollTop($('#chat-body')[0].scrollHeight);
    }
-   
-    /// message chat body scroll ///
-   function scrollMessageChatBody() {
-        $('#message-body').scrollTop($('#message-body')[0].scrollHeight);
-   }
-   scrollMessageChatBody();
 
 });

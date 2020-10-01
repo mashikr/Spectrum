@@ -38,6 +38,8 @@ $router->add('notification', ['controller' => 'Notification', 'action' => 'view'
 $router->add('notification/', ['controller' => 'Notification', 'action' => 'view']);
 $router->add('findfriends', ['controller' => 'Findfriends', 'action' => 'response']);
 $router->add('findfriends/', ['controller' => 'Findfriends', 'action' => 'response']);
+$router->add('post/{id:\d+}', ['controller' => 'Posts', 'action' => 'show']);
+$router->add('post/delete/{id:\d+}', ['controller' => 'Posts', 'action' => 'delete']);
 
 
 

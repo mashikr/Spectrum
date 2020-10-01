@@ -1,0 +1,163 @@
+{% if posts %}
+    {% for post in posts %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center"> 
+                        <div class="profile-icon-img-overlay mr-2">
+                            <img src="{{ folder }} /public/img/{{ post.profile_pic }}" alt="user Icon">
+                        </div>
+                        <div class="d-flex flex-column">
+                        <div>
+                            <a href="{{ url_root }}/profile/{{ post.author_id }}">{{ post.firstname }} {{ post.lastname }}</a>
+
+                            {% if post.type == 'profile_pic' %}
+                                <small class="text-muted">Update Profile Photo</small>
+                            {% elseif post.type == 'cover_pic' %}
+                                <small class="text-muted">Update Cover Photo</small>
+                            {% endif %}
+                             
+                        </div>
+                        <small class="text-muted position-relative">
+                            <span class="ago-time">{{ post.time }}
+                                <div class="date-time card p-1">{{ post.date_time }}</div>
+                            </span> 
+                            {% if post.privacy == 'Public' %}
+                                <i class="fas fa-globe-asia ml-2" title="Public"></i>
+                            {% elseif post.privacy == 'Friends' %}
+                                <i class="fas fa-user-friends ml-2" title="Friends"></i>
+                            {% else %}
+                                <i class="fas fa-lock ml-2" title="Private"></i>
+                            {% endif %}
+                            </small>
+                        </div>
+                    </div>
+                    {% if post.option == 'newsfeed' %}
+                        <a href="{{ url_root }}/post/{{ post.id }}" title="Details"><i class="fas fa-share"></i></a>
+                    {% else %}
+                        <button class="btn btn-light position-relative rounded-circle post-option">
+                            <i class="fas fa-ellipsis-v"></i>
+
+                            <div class="card p-2 position-absolute post-option-dropdown d-none">
+                                <a href="{{ url_root }}/post/{{ post.id }}" class="btn btn-sm btn-light mb-1">View details</a>
+                                <a href="{{ url_root }}/post/edit/{{ post.id }}" class="btn btn-sm btn-warning mb-1">Edit post</a>
+                                <a href="{{ url_root }}/post/delete/{{ post.id }}" class="btn btn-sm btn-danger">Delete</a>
+                            </div>
+                        </button>
+                    {% endif %}
+                </div>
+                <div class="post-content mt-2">
+                    {% if post.content %}
+                        <p class="text-dark">{{ post.content}}</p>
+                    {% endif %}
+
+                    {% if (post.type == 'photo') or (post.type == 'profile_pic') or  (post.type == 'cover_pic') %}
+                        <img src="{{ folder }}/public/img/{{ post.file_name }}" class="img-fluid mt-2" alt="">
+                    {% elseif post.type == 'video' %}
+                        <video class="img-fluid" controls>
+                            <source src="{{ folder }}/public/video/{{ post.file_name }}"
+                                type="video/mp4">
+                        </video>
+                    {% elseif post.type == 'audio' %}
+                        <audio class="mt-2" controls>
+                            <source src="{{ folder }}/public/audio/{{ post.file_name }}" 
+                                type="audio/mp3">
+                        </audio>
+                    {% elseif post.type == 'pdf' %}
+                        <div class="mt-2 btn btn-light">
+                            <a href="{{ folder }}/public/audio/{{ post.file_name }}">{{ post.file_name }}</a>
+                            <i class="ml-2 h4 far fa-file-pdf text-warning"></i>
+                        </div>
+                    {% endif %}
+                    
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <a class="pointer like-list" data-post="{{ post.id }}" title="likes">{{ post.likes }} Likes</a>
+                    <a class="pointer comment-list" data-post="{{ post.id }}">{{ post.comments }} Comments</a>
+                </div>
+                <hr class="m-0">
+
+                <div class="d-flex mt-2 align-items-start">
+                    <div class="btn btn-sm w-100 btn-light mr-3"><i class="far fa-thumbs-up"></i> Like</div>
+                    <button class="btn btn-sm w-100 btn-light" data-toggle="collapse" data-target="#post{{ post.id }}" aria-expanded="false" aria-controls="post1"><i class="far fa-comment-alt"></i> Comment</button>
+                </div>
+
+                <div class="collapse py-2" id="post{{ post.id }}">
+                    <div class="d-flex align-items-center">
+                        <input type="text" class="form-control form-control-sm mr-1" placeholder="Add comment"> 
+                        
+                        <div class="p-1 position-relative pointer comment-emoji">
+                            <i class="far fa-grin chat-emoji" data-target="comment-emoji"></i>
+                            <div class="chat-emoji-body d-none rounded p-2 shadow">
+                                
+                            </div> 
+                        </div>
+
+                        <input class="d-none" type="file" id="comment-image"> 
+                        <label class="p-1 m-0 pointer" for="comment-image"><i class="far fa-images"></i></label>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    {% endfor %}
+{% else %}
+
+<div class="lead text-center">No post available</div>
+
+{% endif %}
+
+<!-- <div class="card mb-3">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center"> 
+                <div class="profile-icon-img-overlay mr-2">
+                    <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
+                </div>
+                <div class="d-flex flex-column">
+                   <a href="#">Ashikur Rahman</a>
+                   <small class="text-muted position-relative">
+                    <span class="ago-time">1 hour ago
+                        <div class="date-time card p-1">Sun, 27 Sep, 2020 at 10:27 PM</div>
+                    </span> 
+                    <i class="fas fa-user-friends ml-2" title="Friends"></i>
+                    </small>
+                </div>
+            </div>
+            <a href="#" title="Details"><i class="fas fa-share"></i></a>
+        </div>
+        <div class="post-content mt-2">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum facilis mollitia quas. Nostrum, labore iusto, doloribus provident voluptatum alias veniam voluptas accusantium ea eum ut magnam nulla quia rem debitis.
+
+            <img src="img/logo-text-dark.png" class="img-fluid mt-2" alt="">
+        </div>
+        <div class="d-flex justify-content-between mt-2">
+            <a class="pointer like-list" data-post="134" title="likes">20 Likes</a>
+            <a class="pointer comment-list" data-post="124">30 Comments</a>
+        </div>
+        <hr class="m-0">
+        <div class="d-flex mt-2 align-items-start">
+            <div class="btn btn-sm w-100 btn-light mr-3"><i class="far fa-thumbs-up"></i> Like</div>
+            <button class="btn btn-sm w-100 btn-light" data-toggle="collapse" data-target="#post13" aria-expanded="false" aria-controls="post13"><i class="far fa-comment-alt"></i> Comment</button>
+        </div>
+
+        <div class="collapse py-2" id="post13">
+            <div class="d-flex align-items-center">
+                <input type="text" class="form-control form-control-sm mr-1" placeholder="Add comment"> 
+                
+                <div class="p-1 position-relative pointer comment-emoji">
+                    <i class="far fa-grin chat-emoji" data-target="comment-emoji"></i>
+                    <div class="chat-emoji-body d-none rounded p-2 shadow">
+                        
+                    </div> 
+                </div>
+
+                <input class="d-none" type="file" id="comment-image"> 
+                <label class="p-1 m-0 pointer" for="comment-image"><i class="far fa-images"></i></label>
+            </div>
+        </div>
+
+    </div>
+</div> -->

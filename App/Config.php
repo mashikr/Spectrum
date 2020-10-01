@@ -20,6 +20,7 @@ class Config {
 
     const URL_ROOT = 'http://localhost/spectrum';
 
+    const POST_LIMIT = 10;
 }
 
 ?>

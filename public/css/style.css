@@ -166,7 +166,7 @@ body {
     cursor: pointer;
 }
 .profile-pic-update-btn:hover {
-    color: #fff;
+    color: #999;
 }
 .cover-pic-update-btn {
     position: absolute;
@@ -233,6 +233,57 @@ body {
 #find-friends img {
     max-height: 5.2rem;
     width: auto !important;
+}
+#failed-msg {
+    position: fixed;
+    top: 4rem;
+    right: 0;
+    width: 50%;
+    z-index: 1100;
+    display: none;
+}
+.date-time {
+    position: absolute;
+    top: 1.4rem;
+    width: 12rem;
+    left: -3.5rem;
+    display: none;
+    text-align: center;
+}
+.date-time::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 50%;
+    height: 10px;
+    width: 10px;
+    background-color: #fff;
+    border-left: 1px solid rgba(0,0,0,.125);
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    z-index: 100;
+    transform: rotate(135deg);
+}
+.ago-time:hover .date-time {
+    display: block;
+}
+.post-option-dropdown {
+    width: 8rem;
+    right: 0;
+    top: 2.3rem;
+    z-index: 1100;
+}
+.post-option-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 9px;
+    height: 10px;
+    width: 10px;
+    background-color: #fff;
+    border-left: 1px solid rgba(0,0,0,.125);
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    z-index: 1100;
+    transform: rotate(135deg);
 }
 @media only screen and (max-width: 768px) {
     

@@ -8,7 +8,7 @@ class Flash {
             $_SESSION['flash_notify'] = [];
         }
 
-        $_SESSION['flash_notify'] [] = ['msg' => $msg, 'type' => $type];
+        $_SESSION['flash_notify'] = ['msg' => $msg, 'type' => $type];
     }
 
     public static function getMessage() {

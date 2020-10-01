@@ -1,0 +1,11 @@
+[27-Sep-2020 17:50:43 Europe/Berlin] Uncaught exception: 'ErrorException' with message: 'move_uploaded_file(/spectrumpublic/audio/Every Night In My Dreams See You And Feel You.mp3): failed to open stream: No such file or directory'
+Stack trace: #0 [internal function]: Core\Error::errorHandler(2, 'move_uploaded_f...', 'C:\\xampp\\htdocs...', 51, Array)
+#1 C:\xampp\htdocs\spectrum\App\Controllers\Posts.php(51): move_uploaded_file('C:\\xampp\\tmp\\ph...', '/spectrumpublic...')
+#2 [internal function]: App\Controllers\Posts->addAction()
+#3 C:\xampp\htdocs\spectrum\Core\Controller.php(19): call_user_func_array(Array, Array)
+#4 C:\xampp\htdocs\spectrum\Core\Router.php(76): Core\Controller->__call('add', Array)
+#5 C:\xampp\htdocs\spectrum\public\index.php(46): Core\Router->dispatch('posts/add')
+#6 {main}
+Throw in 'C:\xampp\htdocs\spectrum\App\Controllers\Posts.php' on line 51
+//////////////////////////////////
+

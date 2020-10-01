@@ -8,7 +8,9 @@ class Notification extends \Core\Controller {
 
     public function viewAction() {
         $this->before();
-        View::renderTemplate('Notification/view.html');
+        View::renderTemplate('Notification/view.html', [
+            'page' => 'notification'
+        ]);
       
     }
 }

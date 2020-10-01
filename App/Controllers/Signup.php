@@ -13,6 +13,12 @@ use \App\Models\User;
 class Signup extends \Core\Controller
 {
 
+  public function newAction() {
+      View::renderTemplate('Signup/new.html',[
+        'page' => 'signup'
+    ]);
+  }
+  
   public function createAction() {
       $newUser = new User($_POST);
       

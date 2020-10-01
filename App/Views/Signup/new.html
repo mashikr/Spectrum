@@ -39,11 +39,13 @@
                         </div>
                         <div class="d-flex form-group">
                             <label class="w-25 text-muted" for="gender">Gender:</label>
-                            <select name="gender" id="gender" class="form-control form-control-sm w-50">
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Other">Other</option>
+                            <select name="gender" id="gender" class="form-control form-control-sm w-50" required>
+                                <option value="">Select gender</option>
+                                <option {% if user.gender == 'Male' %} selected {% endif %}  value="Male">Male</option>
+                                <option {% if user.gender == 'Female' %} selected {% endif %}  value="Female">Female</option>
+                                <option {% if user.gender == 'Other' %} selected {% endif %}  value="Other">Other</option>
                             </select>
+                            <div class="error">{{ user.errors.gender }}</div>
                         </div>
                         <div class="form-group">
                             <input type="password" class="form-control form-control-sm" placeholder="password" name="password" value="{{ user.password }}" id="password">

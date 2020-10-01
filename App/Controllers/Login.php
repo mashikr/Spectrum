@@ -11,14 +11,10 @@ class Login extends \Core\Controller {
 
   public function newAction() {
       $user = User::authenticate($_POST['email'], $_POST['password']);
-      
       if ($user) {
           session_regenerate_id(true);
-          $_SESSION['user_id'] = $user->id;
-          $_SESSION['firstname'] = $user->firstname;
-          $_SESSION['lastname'] = $user->lastname;
-          $_SESSION['email'] = $user->email;
-
+          
+          $this->logIn($user);
          
           User::rememberLogin($user->id,  $user->email);
           

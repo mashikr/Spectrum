@@ -10,7 +10,7 @@
 <div class="row justify-content-center overflow-hidden w-100">
     <div class="col-lg-8 pt-2 mx-2">
 
-        <div class="alert alert-success mb-2 d-flex align-items-center">
+        <!-- <div class="alert alert-success mb-2 d-flex align-items-center">
 
             <a class="alert-link d-flex align-items-center mr-2" href="#"><div class="profile-icon-img-overlay-link mr-2"><img src="{{ folder }} /public/img/male-user.png" alt="user Icon"></div> Ashikur Rahman</a>
             send you a friend request. <small class="text-muted ml-2">(1 hour ago)</small>
@@ -29,22 +29,25 @@
                 <a href="#" class="btn btn-sm btn-danger">Decline</a>
             </div>
         </div>
-        <hr>
+        <hr> -->
         <div class="lead">Find Friends</div>
         
         <div class="row" id="find-friends">
-            <div class="col-md-6 p-3">
-                <div class="d-flex border rounded p-3">
-                    <img src="{{ folder }}/public/img/asif.PNG" alt="" class="w-25 rounded">
-                    <div class="ml-4 pt-2">
-                        <a href="#" class="h6">Asif mahmud</a> <br>
-                        <small class="text-muted">12 mutual friends</small>
-                    </div>
-                    <div class="ml-auto"><a href="#" class="btn btn-primary btn-sm">Send Request</a></div>
+            {% for notFriend in suggest %}
+                <div class="col-md-6 p-3">
+                    <div class="d-flex border rounded p-3">
+                        <img src="{{ folder }}/public/img/{{ notFriend.profile_pic }}" alt="" class="w-25 rounded">
+                        <div class="ml-4 pt-2">
+                            <a href="{{ url_root }}/profile/{{ notFriend.id }}" class="h6">{{ notFriend.firstname }} {{ notFriend.lastname }}</a> <br>
+                            <small class="text-muted">{{ notFriend.friends }} mutual friends</small>
+                        </div>
+                        <div class="ml-auto"><a href="#" class="btn btn-primary btn-sm">Send Request</a></div>
+                    </div>                    
                 </div>
-                
-            </div>
-            <div class="col-md-6 p-3">
+            {% endfor %}
+            
+
+            <!-- <div class="col-md-6 p-3">
                 <div class="d-flex border rounded p-3">
                     <img src="{{ folder }}/public/img/forhad.PNG" alt="" class="w-25 rounded">
                     <div class="ml-4 pt-2">
@@ -53,7 +56,7 @@
                     </div>
                     <div class="ml-auto"><a href="#" class="btn btn-primary btn-sm">Send Request</a></div>
                 </div>
-            </div>
+            </div> -->
         </div>
         
         

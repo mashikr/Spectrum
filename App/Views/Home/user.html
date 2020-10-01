@@ -9,95 +9,63 @@
 
   <div class="container index-height">
     <div class="row justify-content-start h-100">
+        <!-- Side bar start-->
         <div class="col-md-4 col-lg-3 pt-2 d-none d-md-block position-relative" id="sidebar">
             <div id="sidebar-link">
                 <a href="profile" title="Profile" class="btn btn-block text-left btn-light text-primary d-flex align-items-center"> 
-                    <div class="profile-icon-img-overlay mr-2"><img src="{{ folder }} /public/img/male-user.png" alt="user Icon"></div> Ashikur Rahman
+                    <div class="profile-icon-img-overlay mr-2"><img src="{{ folder }} /public/img/{{ user.profile_pic }}" alt="user Icon"></div> {{ user.name }}
                 </a>
                 <a href="messages" class="btn btn-block text-left btn-light text-primary" title="Messages">Messages</a>
                 <a href="findfriends" class="btn btn-block text-left btn-light text-primary" title="Find friends">Find Friends</a>
                 <a href="notification" class="btn btn-block text-left btn-light text-primary" title="Notifications">Notifications</a>
             </div>
         </div>
+        <!-- Side bar end-->
+
+        <!-- newsfeed start-->
         <div class="col col-lg-6 border-left" id="">
-            <div class="bg-light p-3 mt-2">
-                <form action="posts/add" method="post">
-                    <textarea class="form-control" name="post">Share Something....</textarea>
-                <div class="d-flex mt-2 justify-content-between">
-                    <div class="custom-file w-50">
-                        <label class="custom-file-label" for="customFile">Add image or file</label>
-                        <input type="file" class="custom-file-input" id="customFile">
+                {% if flash_msg.type == 'success' %}        
+                    <div class="alert alert-success alert-dismissable mt-2">
+                        <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                        {{ flash_msg.msg }}
                     </div>
-                    <select class="custom-select w-25" title="Privacy">
-                        <option value="Friends">Friends</option>
-                        <option value="Public">Public</option>
-                        <option value="Private">Private</option>
-                      </select>
-                    <input type="submit" class="btn btn-primary" name="submit" value="Post">
-                </div>
+                {% endif %}
+                {% if flash_msg.type == 'failed'%}
+                    <div class="alert alert-danger alert-dismissable mt-2">
+                        <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                        {{ flash_msg.msg }}
+                    </div>
+                {% endif %}
+
+            <div class="bg-light p-3 mt-2">
+                <!-- post form start-->
+                <form action="posts/add" method="post" enctype="multipart/form-data">
+                    <textarea class="form-control" name="post" placeholder="Share Something...."></textarea>
+                    <div class="d-flex mt-2 justify-content-between">
+                        <div class="custom-file w-50">
+                            <label class="custom-file-label" for="customFile">Add image or file</label>
+                            <input type="file" name="post-file" class="custom-file-input" id="customFile">
+                        </div>
+                        <select class="custom-select w-25" name="privacy" title="Privacy">
+                            <option value="Public">Public</option>
+                            <option value="Friends">Friends</option>
+                            <option value="Private">Private</option>
+                        </select>
+                        <input type="submit" class="btn btn-primary" name="submit" value="Post">
+                    </div>
                 </form>
+                 <!-- post form end-->
             </div>
 
             <hr>
             
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex align-items-center"> 
-                        <div class="profile-icon-img-overlay mr-2">
-                            <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-                        </div>
-                        <div class="d-flex flex-column">
-                           <a href="#">Ashikur Rahman</a>
-                           <small class="text-muted">1 hour ago <i class="fas fa-user-friends ml-2"></i></small>
-                        </div>
-                    </div>
-                    <div class="post-content mt-2">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum facilis mollitia quas. Nostrum, labore iusto, doloribus provident voluptatum alias veniam voluptas accusantium ea eum ut magnam nulla quia rem debitis.
-
-                        <img src="img/bg-img.jpg" class="img-fluid mt-2" alt="">
-                    </div>
-                    <div class="d-flex justify-content-between mt-2">
-                        <a href="#">20 Likes</a>
-                        <a href="#">30 Comments</a>
-                    </div>
-                    <hr class="m-0">
-                    <div class="d-flex mt-2 align-items-start">
-                        <div class="btn btn-sm w-100 btn-light mr-3"><i class="far fa-thumbs-up"></i> Like</div>
-                        <div class="btn btn-sm w-100 btn-light"><i class="far fa-comment-alt"></i> Comment</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex align-items-center"> 
-                        <div class="profile-icon-img-overlay mr-2">
-                            <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-                        </div>
-                        <div class="d-flex flex-column">
-                           <a href="#">Ashikur Rahman</a>
-                           <small class="text-muted">1 hour ago <i class="fas fa-user-friends ml-2"></i></small>
-                        </div>
-                    </div>
-                    <div class="post-content mt-2">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum facilis mollitia quas. Nostrum, labore iusto, doloribus provident voluptatum alias veniam voluptas accusantium ea eum ut magnam nulla quia rem debitis.
-
-                        <img src="img/logo-text-dark.png" class="img-fluid mt-2" alt="">
-                    </div>
-                    <div class="d-flex justify-content-between mt-2">
-                        <a href="#">20 Likes</a>
-                        <a href="#">30 Comments</a>
-                    </div>
-                    <hr class="m-0">
-                    <div class="d-flex mt-2 align-items-start">
-                        <div class="btn btn-sm w-100 btn-light mr-3"><i class="far fa-thumbs-up"></i> Like</div>
-                        <div class="btn btn-sm w-100 btn-light"><i class="far fa-comment-alt"></i> Comment</div>
-                    </div>
-                </div>
-            </div>
+            {{ include ("posts.html") }}
 
         </div>
     </div>
   </div>
   
+{% endblock %}
+{% block footer %} 
+<script src="{{ folder }}/public/js/home.js"></script>
 {% endblock %}
