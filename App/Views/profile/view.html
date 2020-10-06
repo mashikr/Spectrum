@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Spectrum | Profile{% endblock %}
+{% block title %}Spectrum | {{ user.name }}{% endblock %}
 
 {% block body %}
 {{ include ("navbar.html") }}
@@ -8,19 +8,23 @@
 <div style="height: 3.78rem;"></div>
 <div class="container profile-div pb-4">
 
-    <div style="background-image: url('{{ folder }}/public/img/{{ user.cover_pic }}');" class="position-relative profile-cover-pic pointer">
+     <div style="background-image: url('{{ folder }}/public/img/{{ user.cover_pic }}');" class="position-relative profile-cover-pic pointer">
         <!-- <img src="{{ folder }}/public/img/ashik-c.JPG" alt="Ashik" class="img-fluid rounded"> -->
         <div class="profile-img">
             <div class="profile-img-overlay">
                 <a href="#"><img src="{{ folder }}/public/img/{{ user.profile_pic }}" alt=""></a>
-                <div class="profile-pic-update-btn"><i class="fas fa-camera"></i></div>
+                {% if user.id == cur_user.id %}
+                    <div class="profile-pic-update-btn"><i class="fas fa-camera"></i></div>
+                {% endif %}
             </div>
         </div>
-        <div class="cover-pic-update-btn btn btn-light btn-sm"><i class="fas fa-camera"></i> Update Cover Pic</div>
+        {% if user.id == cur_user.id %}
+            <div class="cover-pic-update-btn btn btn-light btn-sm"><i class="fas fa-camera"></i> Update Cover Pic</div>
+        {% endif %}
     </div>
 
     <!-- update profile and cover pic-->
-  
+{% if user.id == cur_user.id %}
   <!-- Modal -->
   <div class="modal" id="photoUpdateModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="photoUpdateModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -37,25 +41,56 @@
               <input type="file" class="d-none" name="image" id="update-photo">
               <input type="hidden" name="type" value="test" id="photo-type">
         </form>
-              Select a photo:
-              <div class="row mt-2">
-                  <div class="col-4 py-2">
-                      <a href="#"><img src="{{ folder }}/public/img/ashik.JPG" class="img-fluid rounded" alt="Ashik"></a>
-                  </div>
-                  <div class="col-4 py-2">
-                    <a href="#"><img src="{{ folder }}/public/img/ashik.JPG" class="img-fluid rounded" alt="Ashik"></a>
-                  </div>
-                  <div class="col-4 py-2">
-                    <a href="#"><img src="{{ folder }}/public/img/ashik.JPG" class="img-fluid rounded" alt="Ashik"></a>
-                  </div>
-              </div>
+            {% if photos %}
+                Select a photo:
+                <div class="row mt-2">
+                    {% for photo in photos %}
+                        
+                        {%if photo.type != 'profile_pic' %}
+                            <div class="col-4 py-2 updateProfilePhoto">
+                                <a href="{{ url_root }}/profile/updateProfilePhoto/{{ photo.id }}"><img src="{{ folder }}/public/img/{{ photo.file_name }}" class="img-fluid rounded" alt="{{ photo.file_name }}"></a>
+                            </div>
+                        {% endif %}
+                        {%if photo.type != 'cover_pic' %}
+                            <div class="col-4 py-2 updateCoverPhoto">
+                                <a href="{{ url_root }}/profile/updateCoverPhoto/{{ photo.id }}"><img src="{{ folder }}/public/img/{{ photo.file_name }}" class="img-fluid rounded" alt="{{ photo.file_name }}"></a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
       </div>
     </div>
   </div>
 <!-- Modal end -->
+{% endif %}
 
     <h3 class="text-center text-dark my-4">{{ user.name }}</h3>
+
+    {% if user.id != cur_user.id %}
+        {% if relation == 'suggest' %}
+            <div class="card mb-4 p-2 flex-row justify-content-between align-items-center">
+                    <span>Do you know him ?</span> 
+                    <a href="{{ url_root }}/findfriends/sendRequest/{{ user.id }}" class="btn btn-primary btn-sm">Send request</a>
+            </div>
+        {% endif %}
+        {% if relation == 'receiveReq' %}
+            <div class="card mb-4 p-2 flex-row justify-content-between align-items-center">
+                    <span>Send you a request..</span> 
+                    <div>
+                        <a href="{{ url_root }}/findfriends/addFriend/{{ user.id }}" class="btn btn-success btn-sm mr-2">Accept</a>
+                        <a href="{{ url_root }}/findfriends/decline/{{ user.id }}" class="btn btn-danger btn-sm">Decline</a>
+                    </div>
+            </div>
+        {% endif %}
+        {% if relation == 'sendReq' %}
+            <div class="card mb-4 p-2 flex-row justify-content-between align-items-center">
+                    <span>You send a request..</span> 
+                    <a href="{{ url_root }}/findfriends/cancelRequest/{{ user.id }}" class="btn btn-danger btn-sm">Cancel request</a>
+            </div>
+        {% endif %}
+    {% endif %}
 
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -70,10 +105,13 @@
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="photos-tab" data-toggle="tab" href="#photos" role="tab" aria-controls="photos" aria-selected="false">Photos</a>
           </li>
+        {% if relation == 'friend' %}
+            <a onclick="javascript: confirm('Are you sure to unfriend him?')" href="{{ url_root }}/findfriends/unfriend/{{ user.id }}" class="btn btn-primary btn-sm my-1 ml-auto">Unfriend</a>
+        {% endif %}
       </ul>
 
       <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="timeline" role="tabpanel" aria-labelledby="timeline-tab">
+        <div class="tab-pane fade show active pt-2" id="timeline" role="tabpanel" aria-labelledby="timeline-tab">
             {% if flash_msg.type == 'success' %}        
                     <div class="alert alert-success alert-dismissable mt-2">
                         <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
@@ -86,6 +124,7 @@
                         {{ flash_msg.msg }}
                     </div>
                 {% endif %}
+        {% if user.id == cur_user.id %}
             <div class="bg-light p-3 mt-2">
                 <!-- post form start-->
                 <form action="posts/add" method="post" enctype="multipart/form-data">
@@ -108,6 +147,7 @@
             </div>
 
             <hr>
+            {% endif %}
             
             {{ include ("posts.html") }}
             
@@ -119,7 +159,9 @@
                 <div class="col" id="works-At">
                     {{ user.works_at }}
                 </div>
-                <div class="col-1"><i data-target="works-At" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
+                {% if user.id == cur_user.id %}
+                    <div class="col-1"><i data-target="works-At" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
+                {% endif %}
             </div>
             <hr>
             <div class="row">
@@ -127,7 +169,9 @@
                 <div class="col" id="studied">
                     {{ user.studied }}
                 </div>
-                <div class="col-1"><i data-target="studied" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
+                {% if user.id == cur_user.id %}
+                    <div class="col-1"><i data-target="studied" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
+                {% endif %}
             </div>
             <hr>
             <div class="row">
@@ -135,7 +179,9 @@
                 <div class="col" id="lives-In">
                     {{ user.live_in }}
                 </div>
-                <div class="col-1"><i data-target="lives-In" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
+                {% if user.id == cur_user.id %}
+                    <div class="col-1"><i data-target="lives-In" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
+                {% endif %}
             </div>
             <hr>
             <div class="row">
@@ -143,7 +189,9 @@
                 <div class="col" id="home-Town">
                     {{ user.home_town }}
                 </div>
-                <div class="col-1"><i data-target="home-Town" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
+                {% if user.id == cur_user.id %}
+                    <div class="col-1"><i data-target="home-Town" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
+                {% endif %}
             </div>
             <hr>
             <div class="row">
@@ -151,7 +199,9 @@
                 <div class="col" id="phone-No">
                     {{ user.phone }}                   
                 </div>
-                <div class="col-1"><i data-target="phone-No" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
+                {% if user.id == cur_user.id %}
+                    <div class="col-1"><i data-target="phone-No" class="fas fa-edit btn text-muted about-edit-btn"></i></div>
+                {% endif %}
             </div>
             <hr>
             <div class="row">
@@ -198,86 +248,59 @@
 
         <div class="tab-pane fade p-2" id="friends" role="tabpanel" aria-labelledby="friends-tab">
             
-            <div class="row">
-                <div class="col-6 p-2">
-                    <div class="d-flex border rounded p-2">
-                        <img src="{{ folder }}/public/img/asif.PNG" alt="" class="w-25 rounded">
-                        <div class="ml-4 pt-2">
-                            <a href="#" class="h6">Asif mahmud</a> <br>
-                            <small class="text-muted">12 mutual friends</small>
+            {% if friends %}
+                <div class="row">
+                    {% for friend in friends %}
+                        <div class="col-6 p-2">
+                            <div class="d-flex border rounded p-2">
+                                <img src="{{ folder }}/public/img/{{ friend.profile_pic }}" alt="{{ friend.firstname }} {{ friend.lastname }}" class="suggestFriendPic rounded">
+                                <div class="ml-4 pt-2">
+                                    <a href="{{ url_root }}/profile/{{ friend.id }}" class="h6">{{ friend.firstname }} {{ friend.lastname }}</a> <br>
+                                    {% if friend.id != cur_user.id %}
+                                        <small class="text-muted">{{ friend.mutual }} mutual friends</small>
+                                    {% endif %}
+                                </div>
+                            </div>                        
                         </div>
-                    </div>
-                    
+                    {% endfor %}
                 </div>
-                <div class="col-6 p-2">
-                    <div class="d-flex border rounded p-2">
-                        <img src="{{ folder }}/public/img/forhad.PNG" alt="" class="w-25 rounded">
-                        <div class="ml-4 pt-2">
-                            <a href="#" class="h6">Frohad mia</a> <br>
-                            <small class="text-muted">12 mutual friends</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 p-2">
-                    <div class="d-flex border rounded p-2">
-                        <img src="{{ folder }}/public/img/forhad.PNG" alt="" class="w-25 rounded">
-                        <div class="ml-4 pt-2">
-                            <a href="#" class="h6">Frohad mia</a> <br>
-                            <small class="text-muted">12 mutual friends</small>
-                        </div>
-                    </div>                    
-                </div>
-                <div class="col-6 p-2">
-                    <div class="d-flex border rounded p-2">
-                        <img src="{{ folder }}/public/img/asif.PNG" alt="" class="w-25 rounded">
-                        <div class="ml-4 pt-2">
-                            <a href="#" class="h6">Asif mahmud</a> <br>
-                            <small class="text-muted">12 mutual friends</small>
-                        </div>
-                    </div>                    
-                </div>
-            </div>
+            {% else %}
+                <div class="lead text-center mt-4">No friends available</div> 
+            {% endif %}
 
         </div>
         <div class="tab-pane fade py-2" id="photos" role="tabpanel" aria-labelledby="photos-tab">
             
-            <div class="row py-2">
-                <div class="col-6 col-sm-4 col-md-3 position-relative">
-                    <a href="#" class="gallery-img">
-                        <img src="{{ folder }}/public/img/ashik.JPG" alt="" class="img-fluid rounded">
-                    </a>
+            {% if photos %}
+                <div class="row py-2">
+                    {% for photo in photos %}
+                        <div class="col-6 col-sm-4 col-md-3 position-relative">
+                            <a href="{{ url_root }}/post/{{ photo.id }}" class="gallery-img">
+                                <img src="{{ folder }}/public/img/{{ photo.file_name }}" alt="{{ phone.file_name }}" class="img-fluid rounded">
+                            </a>
 
-                    <div class="dropdown image-action">
-                        <button class="image-action-toggler" data-img="img-1">
-                            <i class="fas fa-pen"></i>
-                        </button>
-                        <div class="dropdown-menu" id="img-1">
-                          <a class="dropdown-item" href="#">Make Profile Picture</a>
-                          <a class="dropdown-item" href="#">Make Cover Photo</a>
-                          <a class="dropdown-item" href="#">Delete</a>
+                            {% if user.id == cur_user.id %}
+                                <div class="dropdown image-action">
+                                    <button class="image-action-toggler" data-img="img-{{ photo.id }}">
+                                        <i class="fas fa-pen"></i>
+                                    </button>
+                                    <div class="dropdown-menu" id="img-{{ photo.id }}">
+                                    {% if photo.type != 'profile_pic' %}
+                                        <a class="dropdown-item" href="{{ url_root }}/profile/updateProfilePhoto/{{ photo.id }}">Make Profile Picture</a>
+                                    {% endif %}
+                                    {% if photo.type != 'cover_pic' %}
+                                        <a class="dropdown-item" href="{{ url_root }}/profile/updateCoverPhoto/{{ photo.id }}">Make Cover Photo</a>
+                                    {% endif %}
+                                    <a class="dropdown-item" onclick="javascript: return confirm('Are you sure want to delete?');" href="{{ url_root }}/post/delete/{{ photo.id }}">Delete</a>
+                                    </div>
+                                </div>
+                            {% endif %}
                         </div>
-                    </div>
-                    
+                    {% endfor %}
                 </div>
-
-                <div class="col-6 col-sm-4 col-md-3 position-relative">
-                    <a href="#" class="gallery-img">
-                        <img src="{{ folder }}/public/img/anik.JPG" alt="" class="img-fluid rounded">
-                    </a>
-
-                    <div class="dropdown image-action">
-                        <button class="image-action-toggler" data-img="img-2">
-                            <i class="fas fa-pen"></i>
-                        </button>
-                        <div class="dropdown-menu" id="img-2">
-                          <a class="dropdown-item" href="#">Make Profile Picture</a>
-                          <a class="dropdown-item" href="#">Make Cover Photo</a>
-                          <a class="dropdown-item" href="#">Delete</a>
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
+            {% else %}
+                <div class="lead text-center mt-4">No photo available</div> 
+            {% endif %}
 
         </div>
       </div>

@@ -7,60 +7,67 @@
 
 <div style="height: 3.78rem;"></div>
 
-<div class="row justify-content-center overflow-hidden w-100">
-    <div class="col-lg-8 pt-2 mx-2">
+<div class="row justify-content-center overflow-hidden w-100 pl-2">
+    <div class="col-lg-8 pt-2 ml-2">
 
-        <!-- <div class="alert alert-success mb-2 d-flex align-items-center">
+        <div id="friendRequests">
+            {% if requests %}
+            {% for request in requests %}
+                <div class="alert {% if request.seen %} alert-success {% else %} alert-primary {% endif %} mb-2 d-flex align-items-center">
 
-            <a class="alert-link d-flex align-items-center mr-2" href="#"><div class="profile-icon-img-overlay-link mr-2"><img src="{{ folder }} /public/img/male-user.png" alt="user Icon"></div> Ashikur Rahman</a>
-            send you a friend request. <small class="text-muted ml-2">(1 hour ago)</small>
-            <div class="ml-auto">
-                <a href="#" class="btn btn-sm btn-primary mb-2 mb-sm-0">Accept</a>
-                <a href="#" class="btn btn-sm btn-danger">Decline</a>
-            </div>
-        </div>
-
-        <div class="alert alert-success mb-2 d-flex align-items-center">
-
-            <a class="alert-link d-flex align-items-center mr-2" href="#"><div class="profile-icon-img-overlay-link mr-2"><img src="{{ folder }} /public/img/male-user.png" alt="user Icon"></div> Ashikur Rahman</a>
-            send you a friend request. <small class="text-muted ml-2">(1 hour ago)</small>
-            <div class="ml-auto">
-                <a href="#" class="btn btn-sm btn-primary mb-2 mb-sm-0">Accept</a>
-                <a href="#" class="btn btn-sm btn-danger">Decline</a>
-            </div>
-        </div>
-        <hr> -->
-        <div class="lead">Find Friends</div>
-        
-        <div class="row" id="find-friends">
-            {% for notFriend in suggest %}
-                <div class="col-md-6 p-3">
-                    <div class="d-flex border rounded p-3">
-                        <img src="{{ folder }}/public/img/{{ notFriend.profile_pic }}" alt="" class="w-25 rounded">
-                        <div class="ml-4 pt-2">
-                            <a href="{{ url_root }}/profile/{{ notFriend.id }}" class="h6">{{ notFriend.firstname }} {{ notFriend.lastname }}</a> <br>
-                            <small class="text-muted">{{ notFriend.friends }} mutual friends</small>
-                        </div>
-                        <div class="ml-auto"><a href="#" class="btn btn-primary btn-sm">Send Request</a></div>
-                    </div>                    
+                    <a class="alert-link d-flex align-items-center mr-2" href="{{ url_root }}/profile/{{ request.sender }}"><div class="profile-icon-img-overlay-link mr-2"><img src="{{ folder }} /public/img/{{ request.profile_pic }}" alt="user Icon"></div> {{ request.firstname }} {{ request.lastname }}</a>
+                    send you a friend request. <small class="text-muted ml-2">({{ request.time }})</small>
+                    <div class="ml-auto">
+                        <button class="btn btn-sm btn-primary mb-2 mb-sm-0 acceptReq" data-id="{{ request.sender }}">Accept</button>
+                        <button class="btn btn-sm btn-danger declineReq"  data-id="{{ request.sender }}">Decline</button>
+                    </div>
                 </div>
             {% endfor %}
-            
-
-            <!-- <div class="col-md-6 p-3">
-                <div class="d-flex border rounded p-3">
-                    <img src="{{ folder }}/public/img/forhad.PNG" alt="" class="w-25 rounded">
-                    <div class="ml-4 pt-2">
-                        <a href="#" class="h6">Frohad mia</a> <br>
-                        <small class="text-muted">12 mutual friends</small>
-                    </div>
-                    <div class="ml-auto"><a href="#" class="btn btn-primary btn-sm">Send Request</a></div>
-                </div>
-            </div> -->
+            <hr>
+        {% endif %}
         </div>
-        
+
+        <div id="sendRequests">
+            {% if sendRequests %}
+                <div class="lead mb-2">Send Request</div>
+                    {% for sendRequest in sendRequests %}
+                        <div class="alert alert-success mb-2 d-flex align-items-center">
+                            <a class="alert-link d-flex align-items-center mr-2" href="{{ url_root }}/profile/{{ sendRequest.receiver }}"><div class="profile-icon-img-overlay-link mr-2"><img src="{{ folder }} /public/img/{{ sendRequest.profile_pic }}" alt="user Icon"></div> {{ sendRequest.firstname }} {{ sendRequest.lastname }}</a>
+                            <small class="text-muted ml-1">({{ sendRequest.time }})</small>
+                            <div class="ml-auto">
+                                <button class="btn btn-sm btn-danger cancelFriendReq" data-id="{{ sendRequest.receiver }}">Cancel Request</button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <hr>
+            {% endif %}
+        </div>
+
+        <div id="">
+            {% if suggest %}
+                <div class="lead">Find Friends</div>
+                
+                <div class="row" id="findFriends">
+                    {% for notFriend in suggest %}
+                        <div class="col-md-6 p-3">
+                            <div class="d-flex border rounded p-3">
+                                <img src="{{ folder }}/public/img/{{ notFriend.profile_pic }}" alt="" class="suggestFriendPic rounded">
+                                <div class="ml-4 pt-2">
+                                    <a href="{{ url_root }}/profile/{{ notFriend.id }}" class="h6">{{ notFriend.firstname }} {{ notFriend.lastname }}</a> <br>
+                                    <small class="text-muted">{{ notFriend.friends }} mutual friends</small>
+                                </div>
+                                <div class="ml-auto"><button class="btn btn-primary btn-sm sendFriendReq" data-id="{{ notFriend.id }}">Send Request</button></div>
+                            </div>                    
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
         
 
     </div>
 </div>
+{% endblock %}
+{% block footer %} 
+<script src="{{ folder }}/public/js/findFriends.js"></script>
 {% endblock %}

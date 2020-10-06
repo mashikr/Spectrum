@@ -13,7 +13,7 @@
         <div class="col-md-4 col-lg-3 pt-2 d-none d-md-block position-relative" id="sidebar">
             <div id="sidebar-link">
                 <a href="profile" title="Profile" class="btn btn-block text-left btn-light text-primary d-flex align-items-center"> 
-                    <div class="profile-icon-img-overlay mr-2"><img src="{{ folder }} /public/img/{{ user.profile_pic }}" alt="user Icon"></div> {{ user.name }}
+                    <div class="profile-icon-img-overlay mr-2"><img src="{{ folder }} /public/img/{{ cur_user.profile_pic }}" alt="{{ cur_user.name }}"></div> {{ cur_user.name }}
                 </a>
                 <a href="messages" class="btn btn-block text-left btn-light text-primary" title="Messages">Messages</a>
                 <a href="findfriends" class="btn btn-block text-left btn-light text-primary" title="Find friends">Find Friends</a>

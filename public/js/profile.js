@@ -21,14 +21,18 @@
 
     $('.profile-pic-update-btn').click(function() {
         $('#photoUpdateModal').modal('show');
-        $('.modal-title').text('Update Profile Photo')
-        $('#photo-type').val('profile_pic')
+        $('.modal-title').text('Update Profile Photo');
+        $('#photo-type').val('profile_pic');
+        $('.updateCoverPhoto').hide();
+        $('.updateProfilePhoto').show();
     });
 
     $('.cover-pic-update-btn').click(function() {
         $('#photoUpdateModal').modal('show');
-        $('.modal-title').text('Update Cover Photo')
-        $('#photo-type').val('cover_pic')
+        $('.modal-title').text('Update Cover Photo');
+        $('#photo-type').val('cover_pic');
+        $('.updateProfilePhoto').hide();
+        $('.updateCoverPhoto').show();
     });
 
      ///// update photo ////////
@@ -86,20 +90,4 @@
             
             $('#update-about-btn').off();
         });
-    });
-
-   
-
-    ////// post action //////
-    $('.post-option').click(function() {
-        $(this).children('.post-option-dropdown').toggleClass('d-none');
-    });
-
-    /// like and comment list ///
-    $('.like-list').click(function() {
-        console.log($(this).attr('data-post'));
-    });
-
-    $('.comment-list').click(function() {
-        console.log($(this).attr('data-post'));
     });

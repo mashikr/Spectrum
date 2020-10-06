@@ -28,18 +28,21 @@ $router->add('logout', ['controller' => 'Login', 'action' => 'logout']);
 $router->add('profile', ['controller' => 'Profile', 'action' => 'own']);
 $router->add('profile/', ['controller' => 'Profile', 'action' => 'own']);
 $router->add('profile/{id:\d+}', ['controller' => 'Profile', 'action' => 'another']);
+$router->add('profile/updateProfilePhoto/{id:\d+}', ['controller' => 'Profile', 'action' => 'updateProfilePhoto']);
+$router->add('profile/updateCoverPhoto/{id:\d+}', ['controller' => 'Profile', 'action' => 'updateCoverPhoto']);
 $router->add('password/reset/{token:[\da-f]+}', ['controller' => 'Password', 'action' => 'reset']);
 $router->add('signup/active/{token:[\da-f]+}', ['controller' => 'Signup', 'action' => 'active']);
 $router->add('{controller}/{action}');
+$router->add('{controller}/{action}/{id:\d+}');
 $router->add('messages', ['controller' => 'Messages', 'action' => 'transfer']);
 $router->add('messages/', ['controller' => 'Messages', 'action' => 'transfer']);
 $router->add('messages/{id:\d+}', ['controller' => 'Messages', 'action' => 'chat']);
-$router->add('notification', ['controller' => 'Notification', 'action' => 'view']);
-$router->add('notification/', ['controller' => 'Notification', 'action' => 'view']);
+$router->add('notification', ['controller' => 'Notifications', 'action' => 'view']);
+$router->add('notification/', ['controller' => 'Notifications', 'action' => 'view']);
 $router->add('findfriends', ['controller' => 'Findfriends', 'action' => 'response']);
 $router->add('findfriends/', ['controller' => 'Findfriends', 'action' => 'response']);
 $router->add('post/{id:\d+}', ['controller' => 'Posts', 'action' => 'show']);
-$router->add('post/delete/{id:\d+}', ['controller' => 'Posts', 'action' => 'delete']);
+$router->add('posts/delete/{id:\d+}', ['controller' => 'Posts', 'action' => 'delete']);
 
 
 

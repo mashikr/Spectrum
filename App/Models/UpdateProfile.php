@@ -70,4 +70,50 @@ class UpdateProfile extends \Core\Model {
 
         return $stmt->execute();
     }
+
+    public static function updateProfilePhoto($id) {
+        $sql = "SELECT `file_name` FROM `posts` WHERE `id` = $id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $file_name = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $sql = "DELETE FROM `posts` WHERE `id` = $id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        return $file_name;
+    }
+
+    public static function setProfilePhotoTophoto() {
+        $id = $_SESSION['user_id'];
+        $sql = "UPDATE `posts` SET `type`= 'photo' WHERE `type` = 'profile_pic' AND `author_id` = $id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        return $stmt->execute();
+    }
+
+    public static function updateCoverPhoto($id) {
+        $sql = "SELECT `file_name` FROM `posts` WHERE `id` = $id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $file_name = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $sql = "DELETE FROM `posts` WHERE `id` = $id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        return $file_name;
+    }
+
+    public static function setCoverPhotoTophoto() {
+        $id = $_SESSION['user_id'];
+        $sql = "UPDATE `posts` SET `type`= 'photo' WHERE `type` = 'cover_pic' AND `author_id` = $id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        return $stmt->execute();
+    }
 }

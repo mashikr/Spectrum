@@ -175,10 +175,18 @@ class User extends \Core\Model {
         return false;
     }
 
-    public static function getFriendList() {
-        $user = static::findByEmail($_SESSION['user']['email']);
-
-        return $user->friends;
+    public static function getFriendList($id = null) {
+        if ($id) {
+            $sql = "SELECT `friends` FROM `users` WHERE `id` = $id";
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+            $friend =  $stmt->fetch();
+            return $friend['friends'];
+        } else {
+            $user = static::findByEmail($_SESSION['user']['email']);
+            return $user->friends;
+        }
     }
 
     public static function rememberLogin($id, $email) {
@@ -311,6 +319,62 @@ class User extends \Core\Model {
         }
 
         return false;
+    }
+
+    public static function getUserById($id) {
+        $sql = "SELECT `id`,`firstname`, `lastname`, `email`, `dob`, `gender`, `friends`, `profile_pic`, `cover_pic`, `works_at`, `studied`, `live_in`, `home_town`, `phone` FROM `users` WHERE `id` = $id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public static function getFriends($friends_str) {
+        $sql = "SELECT `id`,`firstname`,`lastname`,`friends`,`profile_pic` FROM `users` WHERE `id` IN ($friends_str)";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getPhotos($id, $privacy = null) {
+        $condition = '';
+        if ($privacy == 'friend') {
+            $condition = "AND `privacy` IN ('Public', 'Friends')";
+        } elseif ($privacy) {
+            $condition = "AND `privacy` = 'Public'";
+        }
+
+        $sql = "SELECT DISTINCT `id`,`file_name`,`type` FROM `posts` WHERE `type` IN ('photo','profile_pic','cover_pic') AND `author_id` = $id $condition";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function isSendReq($id) {
+        $user_id = $_SESSION['user_id'];
+
+        $sql = "SELECT * FROM `friend_request` WHERE `sender` = $user_id AND `receiver` = $id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->rowCount();
+    }
+
+    public static function isReceiveReq($id) {
+        $user_id = $_SESSION['user_id'];
+
+        $sql = "SELECT * FROM `friend_request` WHERE `sender` = $id AND `receiver` = $user_id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->rowCount();
     }
 }
 

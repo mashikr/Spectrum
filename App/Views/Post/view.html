@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %} Spectrum | Post {% endblock %}
+
+
+{% block body %}
+{{ include ("navbar.html") }}
+<div style="height: 3.78rem;"></div>
+
+<div class="row justify-content-center px-4 py-2">
+    <div class="col-md-8 col-lg-6">
+        {% if flash_msg.type == 'success' %}        
+            <div class="alert alert-success alert-dismissable mt-2">
+                <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                {{ flash_msg.msg }}
+            </div>
+        {% endif %}
+        {% if flash_msg.type == 'failed'%}
+            <div class="alert alert-danger alert-dismissable mt-2">
+                <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                {{ flash_msg.msg }}
+            </div>
+        {% endif %}
+        
+        {{ include ("posts.html")}}
+    </div>
+</div>
+{% endblock %}

@@ -35,7 +35,8 @@ class view {
             
             
             if (isset($_SESSION['user'])) {
-                $twig->addGlobal('user', $_SESSION['user']);
+                $_SESSION['user']['id'] = $_SESSION['user_id'];
+                $twig->addGlobal('cur_user', $_SESSION['user']);
             }
         }
 

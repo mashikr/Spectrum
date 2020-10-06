@@ -9,89 +9,48 @@
 <div class="row justify-content-center w-100 overflow-hidden pl-4">
     <div class="col-lg-8 pt-2">
 
-        <a href="#" class="alert alert-primary btn mb-2 d-flex align-items-center">
-            <div class="profile-icon-img-overlay-link mr-2">
-                <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-            </div>
-                <b class="mr-1">Ashikur Rahman</b> like your post <small class="text-muted ml-2">(1 hour ago)</small>
-                <div class="ml-auto h5">
-                    <i class="fas fa-thumbs-up text-primary"></i>
-                </div>
-        </a>
-        <a href="#" class="alert alert-success btn mb-2 d-flex align-items-center">
-            <div class="profile-icon-img-overlay-link mr-2">
-                <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-            </div>
-                <b class="mr-1">Ashikur Rahman</b> comment your post <small class="text-muted ml-2">(1 hour ago)</small>
-                <div class="ml-auto h5">
-                    <i class="fas fa-comment-alt text-success"></i>
-                </div>
-        </a>
-        <a href="#" class="alert alert-primary btn mb-2 d-flex align-items-center">
-            <div class="profile-icon-img-overlay-link mr-2">
-                <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-            </div>
-                <b class="mr-1">Ashikur Rahman</b> like your profile photo <small class="text-muted ml-2">(1 hour ago)</small>
-                <div class="ml-auto h5">
-                    <i class="fas fa-thumbs-up text-primary"></i>
-                </div>
-        </a>
+        {% if notifications %}
+            {% for notification in notifications %}
+                {% if notification.notify_type == 'like' %}
+                    <a href="{{ url_root }}/post/{{ notification.post_id }}" class="alert alert-primary {% if notification.seen == 1 %}bg-light{% endif %} btn mb-2 d-flex align-items-center">
+                        <div class="profile-icon-img-overlay-link mr-2">
+                            <img src="{{ folder }} /public/img/{{ notification.profile_pic }}" alt="user Icon">
+                        </div>
+                            <b class="mr-1">{{ notification.firstname }} {{ notification.lastname }}</b> likes your {% if notification.type == 'profile_pic' %}profile photo {% elseif notification.type == 'cover_pic' %}cover photo{% else %}{{ notification.type }}{% endif %} <small class="text-muted ml-2">({{ notification.time }})</small>
+                            <div class="ml-auto h5">
+                                <i class="fas fa-thumbs-up text-primary"></i>
+                            </div>
+                    </a>
+                {% endif %}
 
-        <a href="#" class="alert alert-primary btn mb-2 d-flex align-items-center">
-            <div class="profile-icon-img-overlay-link mr-2">
-                <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-            </div>
-                <b class="mr-1">Ashikur Rahman</b> like your post <small class="text-muted ml-2">(1 hour ago)</small>
-                <div class="ml-auto h5">
-                    <i class="fas fa-thumbs-up text-primary"></i>
-                </div>
-        </a>
-        <a href="#" class="alert alert-success btn mb-2 d-flex align-items-center">
-            <div class="profile-icon-img-overlay-link mr-2">
-                <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-            </div>
-                <b class="mr-1">Ashikur Rahman</b> comment your post <small class="text-muted ml-2">(1 hour ago)</small>
-                <div class="ml-auto h5">
-                    <i class="fas fa-comment-alt text-success"></i>
-                </div>
-        </a>
-        <a href="#" class="alert alert-primary btn mb-2 d-flex align-items-center">
-            <div class="profile-icon-img-overlay-link mr-2">
-                <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-            </div>
-                <b class="mr-1">Ashikur Rahman</b> like your profile photo <small class="text-muted ml-2">(1 hour ago)</small>
-                <div class="ml-auto h5">
-                    <i class="fas fa-thumbs-up text-primary"></i>
-                </div>
-        </a>
+                {% if notification.notify_type == 'comment' %}
+                    <a href="{{ url_root }}/post/{{ notification.post_id }}" class="alert alert-success {% if notification.seen == 1 %}bg-light{% endif %} btn mb-2 d-flex align-items-center">
+                        <div class="profile-icon-img-overlay-link mr-2">
+                            <img src="{{ folder }} /public/img/{{ notification.profile_pic }}" alt="user Icon">
+                        </div>
+                            <b class="mr-1">{{ notification.firstname }} {{ notification.lastname }}</b> comments in your {% if notification.type == 'profile_pic' %}profile photo {% elseif notification.type == 'cover_pic' %}cover photo{% else %}{{ notification.type }}{% endif %} <small class="text-muted ml-2">({{ notification.time }})</small>
+                            <div class="ml-auto h5">
+                                <i class="fas fa-comment-alt text-success"></i>
+                            </div>
+                    </a>
+                {% endif %}
 
-        <a href="#" class="alert alert-primary btn mb-2 d-flex align-items-center">
-            <div class="profile-icon-img-overlay-link mr-2">
-                <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-            </div>
-                <b class="mr-1">Ashikur Rahman</b> like your post <small class="text-muted ml-2">(1 hour ago)</small>
-                <div class="ml-auto h5">
-                    <i class="fas fa-thumbs-up text-primary"></i>
-                </div>
-        </a>
-        <a href="#" class="alert alert-success btn mb-2 d-flex align-items-center">
-            <div class="profile-icon-img-overlay-link mr-2">
-                <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-            </div>
-                <b class="mr-1">Ashikur Rahman</b> comment your post <small class="text-muted ml-2">(1 hour ago)</small>
-                <div class="ml-auto h5">
-                    <i class="fas fa-comment-alt text-success"></i>
-                </div>
-        </a>
-        <a href="#" class="alert alert-primary btn mb-2 d-flex align-items-center">
-            <div class="profile-icon-img-overlay-link mr-2">
-                <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-            </div>
-                <b class="mr-1">Ashikur Rahman</b> like your profile photo <small class="text-muted ml-2">(1 hour ago)</small>
-                <div class="ml-auto h5">
-                    <i class="fas fa-thumbs-up text-primary"></i>
-                </div>
-        </a>
+                {% if notification.notify_type == 'friendReq' %}
+                    <a href="{{ url_root }}/profile/{{ notification.sender }}" class="alert alert-success {% if notification.seen == 1 %}bg-light{% endif %} btn mb-2 d-flex align-items-center">
+                        <div class="profile-icon-img-overlay-link mr-2">
+                            <img src="{{ folder }} /public/img/{{ notification.profile_pic }}" alt="user Icon">
+                        </div>
+                            <b class="mr-1">{{ notification.firstname }} {{ notification.lastname }}</b> accept your friend request <small class="text-muted ml-2">({{ notification.time }})</small>
+                            <div class="ml-auto h5">
+                                <i class="fas fa-user-friends text-primary"></i>
+                            </div>
+                    </a>
+                {% endif %}
+            
+            {% endfor %}
+        {% else %}
+            <div class="lead text-center mt-4">No notification available</div>
+        {% endif %}
 
     </div>
 </div>

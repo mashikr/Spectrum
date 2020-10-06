@@ -2,6 +2,8 @@
 
 namespace Core;
 use \App\Models\User;
+use \App\Models\Findfriend;
+use \App\Models\Notification;
 
 abstract class Controller {
     protected $route_params = [];
@@ -86,7 +88,7 @@ abstract class Controller {
         $time = time() - strtotime($time);
 
         if ($time/60 < 1) {
-            return $time .' sec ago';
+            return 'Just now';
         }else if (floor($time/60) == 1) {
             return '1 min ago';
         }else if ($time/3600 < 1) {
@@ -116,6 +118,11 @@ abstract class Controller {
         return str_replace("%",'at', $date);
     }
 
+    protected function getTimeStamp($time) {
+        date_default_timezone_set("Asia/Dhaka");
+        return time() - strtotime($time);
+    }
+
     protected function limitContent($content, $limit) {
         return implode(" ", array_slice(str_word_count($content, 1),0,$limit)) . "...";
       }
@@ -123,6 +130,70 @@ abstract class Controller {
     public function redirect($url) {
         header('location: ' . \App\Config::FOLDER . $url, true, 303);
         exit;
+    }
+
+    public function getRequest($id = null) {
+        $requests = Findfriend::getRequest();
+        $allRequests = [];
+        $friendReqId = [];
+        if ($requests) {
+            foreach ($requests as $request) {
+                $request['time'] = $this->calcTime($request['date-time']);
+                array_push($allRequests, $request);
+                array_push($friendReqId, $request['sender']);
+            }
+        }
+
+        if ($id) {
+            return ['requests' => $allRequests, 'ids' => $friendReqId];
+        }
+
+        return $allRequests;
+    }
+
+    public function getNotifications() {
+        $allNotify = [];
+        $countNotify = 0;
+        $reqNotifys = Notification::getacceptReqNotify();
+        if ($reqNotifys) {
+            foreach ($reqNotifys as $key => $reqNotify) {
+                $reqNotify['time'] = $this->calcTime($reqNotify['date-time']);
+                if ($reqNotify['seen'] == 0) {
+                  $countNotify++;
+                }
+                $reqNotify['notify_type'] = 'friendReq';
+                $key = $this->getTimeStamp($reqNotify['date-time']);
+                $allNotify[$key] = $reqNotify;
+            }
+        }
+
+        $likesNotifys = Notification:: getlikesNotify();
+        if ($likesNotifys) {
+            foreach ($likesNotifys as $key => $likesNotify) {
+                $likesNotify['time'] = $this->calcTime($likesNotify['date-time']);
+                if ($likesNotify['seen'] == 0) {
+                  $countNotify++;
+                }
+                $likesNotify['notify_type'] = 'like';
+                $key = $this->getTimeStamp($likesNotify['date-time']);
+                $allNotify[$key] = $likesNotify;
+            }
+        }
+        $commentNotifys = Notification:: getcommentNotify();
+        if ($commentNotifys) {
+            foreach ($commentNotifys as $key => $commentNotify) {
+                $commentNotify['time'] = $this->calcTime($commentNotify['date-time']);
+                if ($commentNotify['seen'] == 0) {
+                  $countNotify++;
+                }
+                $commentNotify['notify_type'] = 'comment';
+                $key = $this->getTimeStamp($commentNotify['date-time']);
+                $allNotify[$key] = $commentNotify;
+            }
+        }
+        ksort($allNotify);
+
+        return ['allNotify' => $allNotify, 'count' => $countNotify];
     }
 
     public function userId() {

@@ -33,6 +33,21 @@ class Post extends \Core\Model {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function getOtherPost($id, $relation) {
+        $privacy = "'Public'";
+
+        if ($relation == 'friend') {
+            $privacy .= ",'Friends'";
+        }
+        $sql = "SELECT * FROM `posts` WHERE `author_id` = $id AND `privacy` IN ($privacy) ORDER BY id DESC";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public static function newsfeedPost($friends) {
 
         $sql = "SELECT posts.*,users.firstname,users.lastname,users.profile_pic FROM `posts` LEFT JOIN users ON users.id = posts.author_id WHERE (`author_id` = " . $_SESSION['user_id'] . ") OR (`privacy` = 'public')";
@@ -105,4 +120,144 @@ class Post extends \Core\Model {
 
         return $stmt->execute();
     }
+
+    public static function likePost($post_id) {
+        $user_id = $_SESSION['user_id'];
+        $sql = "UPDATE `posts` SET `likes`= `likes` + 1 WHERE `id` = $post_id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        
+        $sql = "INSERT INTO `likes`(`post_id`, `sender_id`) VALUES ($post_id, $user_id)";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        return $db->lastInsertId();
+    }
+
+    public static function isLiked($post_id) {
+        $user_id = $_SESSION['user_id'];
+        $sql = "SELECT * FROM `likes` WHERE `post_id` = $post_id AND `sender_id` = $user_id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->rowCount();
+    }
+
+    public static function unlikePost($post_id) {
+        $user_id = $_SESSION['user_id'];
+        $sql = "DELETE FROM `likes` WHERE `post_id` = $post_id AND `sender_id` = $user_id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        $sql = "UPDATE `posts` SET `likes`= `likes` - 1 WHERE `id` = $post_id";
+        $stmt = $db->prepare($sql);
+        return $stmt->execute();
+    }
+
+    public static function commentText($id, $comment) {
+        $sql = "UPDATE `posts` SET `comments`= `comments` + 1 WHERE `id` = $id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        
+        $sql = "INSERT INTO `comments`(`post_id`, `sender_id`, `content`, `type`) VALUES (:id, :sender, :content, 'text')";
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':sender', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt->bindValue(':content', $comment, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        return $db->lastInsertId();
+    }
+
+    public static function commentEmoji($id, $emoji) {
+        $sql = "UPDATE `posts` SET `comments`= `comments` + 1 WHERE `id` = $id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        
+        $sql = "INSERT INTO `comments`(`post_id`, `sender_id`, `type`, `source`) VALUES (:id, :sender, 'emoji', :source)";
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':sender', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt->bindValue(':source', $emoji, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $db->lastInsertId();
+    }
+
+    public static function commentPhoto($post_id, $file_name) {
+        $sql = "UPDATE `posts` SET `comments`= `comments` + 1 WHERE `id` = $post_id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        
+        $sql = "INSERT INTO `comments`(`post_id`, `sender_id`, `type`, `source`) VALUES (:id, :sender, 'photo', :source)";
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $post_id, PDO::PARAM_INT);
+        $stmt->bindValue(':sender', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt->bindValue(':source', $file_name, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $db->lastInsertId();
+    }
+
+    public static function getPostById($post_id) {
+        $sql = "SELECT posts.*,users.firstname,users.lastname,users.profile_pic FROM `posts` LEFT JOIN users ON users.id = posts.author_id WHERE posts.`id` = $post_id";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public static function getPostAuthor($post_id) {
+        $post = static::getPostById($post_id);
+        return $post['author_id'];
+    }
+
+    public static function getPostComments($post_id) {
+        $sql = "SELECT comments.*,users.firstname,users.lastname,users.profile_pic FROM `comments` LEFT JOIN users ON users.id = comments.sender_id WHERE comments.`post_id` = $post_id  ORDER BY id DESC";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getComment($id) {
+        $sql = "SELECT * FROM `comments` WHERE `id` = $id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public static function deleteComment($id) {
+        $sql = "DELETE FROM `comments` WHERE `id` = $id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        return $stmt->execute();
+    }
+
+    public static function decrementComment($post_id) {
+        $sql = "UPDATE `posts` SET `comments`= `comments` - 1 WHERE `id` = $post_id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        return $stmt->execute();
+    }
+
+    public static function getLikes($post_id) {
+        $sql = "SELECT likes.*,users.firstname,users.lastname,users.profile_pic FROM `likes` LEFT JOIN users ON users.id = likes.sender_id WHERE likes.`post_id` = $post_id  ORDER BY id DESC";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }

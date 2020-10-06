@@ -285,6 +285,18 @@ body {
     z-index: 1100;
     transform: rotate(135deg);
 }
+.suggestFriendPic {
+    max-height: 4rem;
+}
+.notification-item {
+    position: relative;
+}
+.notification-item .fas {
+    position: absolute;
+    left: 1.5rem;
+    bottom: .5rem;
+    font-size: 1.2rem;
+}
 @media only screen and (max-width: 768px) {
     
 }

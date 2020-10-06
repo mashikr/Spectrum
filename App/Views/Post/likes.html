@@ -1,0 +1,10 @@
+{% if likes %}
+    {% for like in likes %}
+       <div class="d-flex align-items-center p-2">
+            <div class="profile-icon-img-overlay-link mr-2">
+                <img src="{{ folder }} /public/img/{{ like.profile_pic }}" alt="{{ like.firstname }} {{ like.lastname }}">
+            </div>
+            <a href="{{ url_root }}/profile{% if like.sender_id != cur_user.id %}/{{ like.sender_id }}{% endif %}">{{ like.firstname }} {{ like.lastname }}</a>
+       </div>
+    {% endfor %}
+{% endif %}

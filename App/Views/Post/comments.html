@@ -1,0 +1,29 @@
+{% if comments %}
+    {% for comment in comments %}
+        <div class="d-flex mt-2">
+            <div>
+                <div class="profile-icon-img-overlay-link mr-2"><img src="{{ folder }} /public/img/{{ comment.profile_pic }}" alt="{{ comment.firstname }} {{ comment.lastname }}"></div>
+            </div>
+            <div class="d-flex flex-column">
+                <div class="bg-light px-2 rounded">
+                    <a href="{{ url_root }}/profile{% if comment.sender_id != cur_user.id %}/{{ comment.sender_id }}{% endif %}">{{ comment.firstname }} {{ comment.lastname }}</a> <br>
+                    {{ comment.content }}
+
+                    {% if comment.type == 'emoji' %}
+                        <img height="40px" src="{{ comment.source }}" alt="emoji">
+                    {% endif %}
+
+                    {% if comment.type == 'photo' %}
+                        <img width="200px" src="{{ folder }}/public/commentImg/{{ comment.source }}" alt="Comment image">
+                    {% endif %}
+                </div>
+                <div class="d-flex justify-content-between">
+                    <small class="text-muted ml-2">{{ comment.time }}</small>
+                    {% if comment.sender_id == cur_user.id or cur_user.id == author %}
+                        <small class="deleteComment" data-post="{{ post.id }}" data-id="{{ comment.id }}"><a class="text-muted ml-2 pointer">Delete</a></small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}

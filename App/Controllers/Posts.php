@@ -78,10 +78,59 @@ class Posts extends \Core\Controller {
     }
 
     public function showAction() {
-        echo $this->route_params['id'];
+        $this->before();
+
+        $post_id = $this->route_params['id'];
+
+        /// get post by id
+        $post = Post::getPostById($post_id);
+
+        $post['time'] = $this->calcTime($post['date-time']);
+        $post['date_time'] = $this->calcTimeFormate($post['date-time']);
+        $post['like'] = Post::isLiked($post['id']);
+        $post_author = $post['author_id'];
+
+        $allPost[0] = $post;
+         /// get friends requests ////
+         $allRequests = $this->getRequest();
+         $countRequest = 0;
+ 
+         if ($allRequests) {
+           foreach ($allRequests as $request) {
+             if ($request['seen'] == 0) {
+               $countRequest++;
+             }
+           }
+         }
+        
+         /// get comments
+        $allcomments = [];
+        $comments = Post::getPostComments($post_id);
+        if ($comments) {
+            foreach ($comments as $comment) {
+                $comment['time'] = $this->calcTime($comment['date-time']);
+                array_push($allcomments, $comment);
+            }
+        }
+
+        //// get notification /////
+        $notifications =  $this->getNotifications();
+        $allNotify = $notifications['allNotify'];
+
+        View::renderTemplate('Post/view.html', [
+            'page' => 'post',
+            'friendsRrequests' =>  $allRequests,
+            'countRequest' => $countRequest,
+            'posts' => $allPost,
+            'comments' => $allcomments,
+            'author' => $post_author,
+            'notifications' => $allNotify
+        ]);
     }
 
     public function deleteAction() { 
+        $this->before();
+
         if (Post::delete($this->route_params['id'])) {
             Flash::addMessage("Successfully delete!", 'success');
         } else {
