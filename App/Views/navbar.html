@@ -40,16 +40,18 @@
 
                     {% if friendsRrequests %}
                         <div class="d-flex flex-column p-2 bg-white rounded shadow" id="friend-request-dropdown">
-                            {% for request in friendsRrequests %}
-                                <a href="{{ url_root }}/profile/{{ request.sender }}" class="btn {% if request.seen == 0 %}alert-primary{% endif %} btn-light mb-1">
-                                    <div class="profile-icon-img-overlay mr-2 float-left">
-                                        <img src="{{ folder }} /public/img/{{ request.profile_pic }}" alt="{{ request.firstname }} {{ request.lastname }}">
-                                    </div> 
-                                <div class="text-left ml-5"><b>{{ request.firstname }} {{ request.lastname }}</b> send you a friend request. <br>
-                                        <small class="text-muted ml-2">{{ request.time }}</small>
-                                    </div>
-                                </a>
-                            {% endfor %}
+                            <div class="dropdown-inner">
+                                {% for request in friendsRrequests %}
+                                    <a href="{{ url_root }}/profile/{{ request.sender }}" class="btn {% if request.seen == 0 %}alert-primary{% endif %} btn-light mb-1">
+                                        <div class="profile-icon-img-overlay mr-2 float-left">
+                                            <img src="{{ folder }} /public/img/{{ request.profile_pic }}" alt="{{ request.firstname }} {{ request.lastname }}">
+                                        </div> 
+                                    <div class="text-left ml-5"><b>{{ request.firstname }} {{ request.lastname }}</b> send you a friend request. <br>
+                                            <small class="text-muted ml-2">{{ request.time }}</small>
+                                        </div>
+                                    </a>
+                                {% endfor %}
+                            </div>
                         </div>
                     {% endif %}
                 </li>
@@ -60,29 +62,15 @@
             
             {% if page != 'messages' %}
                 <li class="nav-item d-md-none  pointer">
-                    <a class="nav-link" href="{{ url_root }}/messages" title="Messages"><i class="far fa-comments"></i><sup class="badge badge-danger">6</sup></a>
+                    <a class="nav-link" href="{{ url_root }}/messages" title="Messages"><i class="far fa-comments"></i><sup class="badge badge-danger">{% if unseenMsg %}{{ unseenMsg }}{% endif %}</sup></a>
                 </li>
-                <li class="nav-item d-none d-md-block position-relative  pointer">
-                    <span class="nav-link pointer" title="Messages" id="messages"><i class="far fa-comments"></i><sup class="badge badge-danger">5</sup></span>
+                <li class="nav-item d-none d-md-block position-relative pointer">
+                    <span class="nav-link pointer" title="Messages" id="messages"><i class="far fa-comments"></i><sup id="messageUnseen" class="badge badge-danger">{% if unseenMsg %}{{ unseenMsg }}{% endif %}</sup></span>
                     
-                    <div class="d-flex flex-column p-2 bg-primary rounded shadow" id="messages-dropdown">
-                        <span class="btn btn-light mb-1 message-link" data-id="1">
-                            <div class="profile-icon-img-overlay mr-2 float-left">
-                                <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-                            </div> 
-                        <div class="text-left"><b>Ashikur Rahman</b><span class="badge badge-danger float-right">5</span><br>
-                                <small class="text-muted">1 hour ago</small>
-                            </div>
-                        </span>
-                        <span class="btn btn-light mb-1 message-link" data-id="2">
-                            <div class="profile-icon-img-overlay mr-2 float-left">
-                                <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
-                            </div> 
-                            <div class="text-left"><b>Ashikur</b><span class="badge badge-danger float-right">5</span><br>
-                                <small class="text-muted">1 hour ago</small>
-                            </div>
-                        </span>
-                    
+                    <div id="messagesDropdown">
+                        {% if chatHolders %}
+                            {{ include("Navbar/chatHolder.html") }}
+                        {% endif %}
                     </div>
                 </li>
             {% endif %}
@@ -96,48 +84,50 @@
 
                     {% if notifications %}
                         <div class="d-flex flex-column p-2 bg-white rounded shadow" id="notification-dropdown">
-                            {% for notification in notifications %}
+                            <div class="dropdown-inner">
+                                {% for notification in notifications %}
 
-                                {% if notification.notify_type == 'like' %}
-                                    <a href="{{ url_root }}/post/{{ notification.post_id }}" class="btn btn-light {% if notification.seen == 0 %}alert-primary{% endif %} mb-1 notification-item">
-                                        <div class="profile-icon-img-overlay d-block mr-2 float-left">
-                                            <img src="{{ folder }} /public/img/{{ notification.profile_pic }}" alt="user Icon">
-                                        </div>
-                                        <div class="text-left ml-5"><b>{{ notification.firstname }} {{ notification.lastname }}</b> likes your {% if notification.type == 'profile_pic' %}profile photo {% elseif notification.type == 'cover_pic' %}cover photo{% else %}{{ notification.type }}{% endif %}. <i class="fas fa-thumbs-up text-primary"></i> <br>
-                                            <small class="text-muted ml-1">{{ notification.time }}</small>
-                                        </div>
-                                    </a>
-                                {% endif %}
+                                    {% if notification.notify_type == 'like' %}
+                                        <a href="{{ url_root }}/post/{{ notification.post_id }}" class="btn btn-light {% if notification.seen == 0 %}alert-primary{% endif %} mb-1 notification-item">
+                                            <div class="profile-icon-img-overlay d-block mr-2 float-left">
+                                                <img src="{{ folder }} /public/img/{{ notification.profile_pic }}" alt="user Icon">
+                                            </div>
+                                            <div class="text-left ml-5"><b>{{ notification.firstname }} {{ notification.lastname }}</b> likes your {% if notification.type == 'profile_pic' %}profile photo {% elseif notification.type == 'cover_pic' %}cover photo{% else %}{{ notification.type }}{% endif %}. <i class="fas fa-thumbs-up text-primary"></i> <br>
+                                                <small class="text-muted ml-1">{{ notification.time }}</small>
+                                            </div>
+                                        </a>
+                                    {% endif %}
 
-                                {% if notification.notify_type == 'comment' %} 
-                                    <a href="{{ url_root }}/post/{{ notification.post_id }}" class="btn btn-light {% if notification.seen == 0 %}alert-primary{% endif %} mb-1 notification-item">
+                                    {% if notification.notify_type == 'comment' %} 
+                                        <a href="{{ url_root }}/post/{{ notification.post_id }}" class="btn btn-light {% if notification.seen == 0 %}alert-primary{% endif %} mb-1 notification-item">
+                                            <div class="profile-icon-img-overlay d-block mr-2 float-left">
+                                                <img src="{{ folder }} /public/img/{{ notification.profile_pic }}" alt="user Icon">
+                                            </div> 
+                                            <div class="text-left ml-5"><b>{{ notification.firstname }} {{ notification.lastname }}</b> comments in your {% if notification.type == 'profile_pic' %}profile photo {% elseif notification.type == 'cover_pic' %}cover photo{% else %}{{ notification.type }}{% endif %}.  <i class="fas fa-comment-alt text-success"></i> <br>
+                                                <small class="text-muted ml-1">{{ notification.time }}</small>
+                                            </div>
+                                        </a>                
+                                    {% endif %}
+
+                                    {% if notification.notify_type == 'friendReq' %} 
+                                    <a href="{{ url_root }}/profile/{{ notification.sender }}" class="btn btn-light {% if notification.seen == 0 %}alert-primary{% endif %} mb-1 notification-item">
                                         <div class="profile-icon-img-overlay d-block mr-2 float-left">
                                             <img src="{{ folder }} /public/img/{{ notification.profile_pic }}" alt="user Icon">
                                         </div> 
-                                        <div class="text-left ml-5"><b>{{ notification.firstname }} {{ notification.lastname }}</b> comments in your {% if notification.type == 'profile_pic' %}profile photo {% elseif notification.type == 'cover_pic' %}cover photo{% else %}{{ notification.type }}{% endif %}.  <i class="fas fa-comment-alt text-success"></i> <br>
+                                        <div class="text-left ml-5"><b>{{ notification.firstname }} {{ notification.lastname }}</b> accept your friend request. <i class="fas fa-user-friends text-primary"></i> <br>
                                             <small class="text-muted ml-1">{{ notification.time }}</small>
                                         </div>
-                                    </a>                
-                                {% endif %}
-
-                                {% if notification.notify_type == 'friendReq' %} 
-                                <a href="{{ url_root }}/profile/{{ notification.sender }}" class="btn btn-light {% if notification.seen == 0 %}alert-primary{% endif %} mb-1 notification-item">
-                                    <div class="profile-icon-img-overlay d-block mr-2 float-left">
-                                        <img src="{{ folder }} /public/img/{{ notification.profile_pic }}" alt="user Icon">
-                                    </div> 
-                                    <div class="text-left ml-5"><b>{{ notification.firstname }} {{ notification.lastname }}</b> accept your friend request. <i class="fas fa-user-friends text-primary"></i> <br>
-                                        <small class="text-muted ml-1">{{ notification.time }}</small>
-                                    </div>
-                                </a>                 
-                                {% endif %}                   
-                            {% endfor %}
+                                    </a>                 
+                                    {% endif %}                   
+                                {% endfor %}
+                            </div>
                          </div>
                     {% endif %}
                 </li>
             {% endif %}
 
             <li class="nav-item  pointer">
-                <a class="nav-link" href="{{ url_root }}/logout" title="Logout"><i class="fas fa-sign-out-alt"></i></a>
+                <a class="nav-link" onclick="javascript: return confirm('Are you sure, want logout?')" href="{{ url_root }}/logout" title="Logout"><i class="fas fa-sign-out-alt"></i></a>
             </li>
         </ul>
         </div>
@@ -158,7 +148,6 @@
             <img src="{{ folder }} /public/img/male-user.png" alt="user Icon">
         </div> 
         <strong class="mr-auto">Ashikur Rahman</strong>
-        <small class="text-muted">just now</small>
         <button type="button" class="ml-2 mb-1 close" id="toast-close">
             <span>&times;</span>
         </button>
@@ -174,21 +163,26 @@
 
         </div>
         
-        <div class="d-flex align-items-center border-top pt-2" id="send-msg">
-            <input class="form-control form-control-sm" type="text">
+        <div class="d-flex align-items-center border-top pt-2" id="send-msg-toast">
+            <input class="form-control form-control-sm" type="text" id="sendText">
 
-            <input class="d-none" type="file" id="send-image"> 
-            <label class="p-1 m-0 ml-1 pointer" for="send-image"><i class="far fa-images"></i></label>
+            <form id="sendImageForm">
+                <input type="hidden" name="user_id" class="msg-user-id" value="">
+                <input class="d-none" name="send-image" type="file" id="sendImage"> 
+                <label class="p-1 m-0 ml-1 pointer" for="sendImage"><i class="far fa-images"></i></label>
+            </form>
 
             <div class="p-1 position-relative pointer" id="toast-emoji">
                 <i class="far fa-grin chat-emoji" data-target="toast-emoji"></i>
                 <div class="chat-emoji-body d-none rounded p-2 shadow" data-target="toast-emoji">
-                    
                 </div> 
             </div>
 
-            <input class="d-none" type="file" id="send-file"> 
-            <label class="p-1 m-0 pointer" for="send-file"><i class="fas fa-link"></i></label>
+            <form id="sendFileForm">
+                <input type="hidden" name="user_id" class="msg-user-id" value="">
+                <input class="d-none" name="send-file" type="file" id="sendFile"> 
+                <label class="p-1 m-0 pointer" for="sendFile"><i class="fas fa-link"></i></label>
+            </form>
         </div>
     </div>
 </div>

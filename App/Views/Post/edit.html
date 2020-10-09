@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %} Spectrum | Edit Post {% endblock %}
+
+{% block body %}
+
+<div class="container mt-4">
+    <a class="navbar-brand btn btn-light" href="{{ url_root }}/home" title="Spectrum home">
+        <img class="home-logo mr-1" src="{{ folder }} /public/img/icon2.png" alt="Icon">
+        <img class="home-logo" src="{{ folder }} /public/img/logo-text-dark.png" alt="Text logo">
+    </a>
+</div>
+
+<div class="row justify-content-center p-2">
+    <div class="col-md-8 col-lg-6">
+
+        <!-- post form start-->
+        <form action="{{ url_root }}/posts/updatePost" method="post" enctype="multipart/form-data">
+            <textarea class="form-control" name="post" placeholder="Content....">{{ content }}</textarea>
+            <div class="d-flex mt-2 justify-content-between">
+                <select class="custom-select w-25" name="privacy" title="Privacy">
+                    <option value="Public" {% if privacy == 'Public' %}selected{% endif %}>Public</option>
+                    <option value="Friends" {% if privacy == 'Friends' %}selected{% endif %}>Friends</option>
+                    <option value="Private" {% if privacy == 'Private' %}selected{% endif %}>Private</option>
+                </select>
+                <input type="hidden" name="id" value="{{ post_id }}">
+                <input type="submit" class="btn btn-primary" name="submit" value="Update">
+            </div>
+        </form>
+         <!-- post form end-->
+        {% if showBack %}
+            <button class="btn btn-primary btn-sm mt-5" onclick="goBack()">Go Back</button>
+
+            <script>
+            function goBack() {
+            window.history.go(-2);
+            }
+            </script>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

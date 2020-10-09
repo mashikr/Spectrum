@@ -53,6 +53,11 @@ class Home extends \Core\Controller {
           }
         }
 
+        /// get messages
+        $messages = $this->getMessages();
+        $unseenMsg = $messages['unseen'];
+        $chatHolders = $messages['chatHolders'];
+
         //// get notification /////
         $notifications =  $this->getNotifications();
         $allNotify = $notifications['allNotify'];
@@ -64,7 +69,9 @@ class Home extends \Core\Controller {
             'countRequest' => $countRequest,
             'posts' => $allPost,
             'notifications' => $allNotify,
-            'countNotify' => $countNotify
+            'countNotify' => $countNotify,
+            'unseenMsg' => $unseenMsg,
+            'chatHolders' => $chatHolders
         ]);
     }
 }

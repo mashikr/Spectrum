@@ -76,6 +76,11 @@ class Findfriends extends \Core\Controller {
             array_push($notFriends, $notFriend);
         }
 
+        /// get messages
+        $messages = $this->getMessages();
+        $unseenMsg = $messages['unseen'];
+        $chatHolders = $messages['chatHolders'];
+
         //// get notification /////
         $notifications =  $this->getNotifications();
         $allNotify = $notifications['allNotify'];
@@ -86,10 +91,12 @@ class Findfriends extends \Core\Controller {
             'requests' => $allRequests,
             'sendRequests' => $allsendRequests,
             'suggest' => $notFriends,
-            'notifications' => $allNotify
+            'notifications' => $allNotify,
+            'unseenMsg' => $unseenMsg,
+            'chatHolders' => $chatHolders
         ]);
     }
-
+    
     public function sendRequestAction() {
         $this->before();
         $id = $this->route_params['id'];

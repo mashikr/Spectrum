@@ -260,4 +260,12 @@ class Post extends \Core\Model {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function updatePost($id, $content, $privacy) {
+        $sql = "UPDATE `posts` SET `content`= :content, `privacy`= '$privacy' WHERE `id` = $id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':content', htmlspecialchars($content), PDO::PARAM_STR);
+        return $stmt->execute();
+    }
+
 }

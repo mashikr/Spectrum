@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use \Core\View;
+use \App\Models\Message;
 
 class Messages extends \Core\Controller {
 
@@ -21,6 +22,10 @@ class Messages extends \Core\Controller {
             }
         }
 
+        /// get messages
+        $messages = $this->getMessages();
+        $chatHolders = $messages['chatHolders'];
+
         //// get notification /////
         $notifications =  $this->getNotifications();
         $allNotify = $notifications['allNotify'];
@@ -31,7 +36,8 @@ class Messages extends \Core\Controller {
             'friendsRrequests' =>  $allRequests,
             'countRequest' => $countRequest,
             'notifications' => $allNotify,
-            'countNotify' => $countNotify
+            'countNotify' => $countNotify,
+            'chatHolders' => $chatHolders
         ]);
     }
 
@@ -49,6 +55,22 @@ class Messages extends \Core\Controller {
             }
         }
         }
+        
+        Message::seenMsg($this->route_params['id']);
+        /// get chat holders
+        $messages = $this->getMessages();
+        $chatHolders = $messages['chatHolders'];
+        $chatUser = $chatHolders[$this->route_params['id']];
+
+        /// get message
+        $messages = Message::getMessage($this->route_params['id']);
+        $allmessages = [];
+        if ($messages) {
+            foreach ($messages as $message) {
+                $message['time'] = $this->calcTime($message['time']);
+                array_push($allmessages, $message);
+            }
+        }
 
         //// get notification /////
         $notifications =  $this->getNotifications();
@@ -60,7 +82,10 @@ class Messages extends \Core\Controller {
             'friendsRrequests' =>  $allRequests,
             'countRequest' => $countRequest,
             'notifications' => $allNotify,
-            'countNotify' => $countNotify
+            'countNotify' => $countNotify,
+            'chatHolders' => $chatHolders,
+            'messages' => $allmessages,
+            'chatUser' => $chatUser
         ]);
      }
 }

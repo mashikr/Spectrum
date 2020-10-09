@@ -22,6 +22,10 @@ class Notifications extends \Core\Controller {
             }
         }
 
+        /// get messages
+        $messages = $this->getMessages();
+        $unseenMsg = $messages['unseen'];
+        $chatHolders = $messages['chatHolders'];
 
         //// get notification /////
         $notifications =  $this->getNotifications();
@@ -32,7 +36,9 @@ class Notifications extends \Core\Controller {
         View::renderTemplate('Notification/view.html', [
             'page' => 'notification',
             'notifications' => $allNotify,
-            'friendsRrequests' =>  $allRequests
+            'friendsRrequests' =>  $allRequests,
+            'unseenMsg' => $unseenMsg,
+            'chatHolders' => $chatHolders
         ]);
     }
 }

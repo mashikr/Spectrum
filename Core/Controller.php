@@ -4,6 +4,7 @@ namespace Core;
 use \App\Models\User;
 use \App\Models\Findfriend;
 use \App\Models\Notification;
+use \App\Models\Message;
 
 abstract class Controller {
     protected $route_params = [];
@@ -124,7 +125,7 @@ abstract class Controller {
     }
 
     protected function limitContent($content, $limit) {
-        return implode(" ", array_slice(str_word_count($content, 1),0,$limit)) . "...";
+        return implode(" ", array_slice(str_word_count($content, 1),0,$limit)) . " ...";
       }
 
     public function redirect($url) {
@@ -194,6 +195,45 @@ abstract class Controller {
         ksort($allNotify);
 
         return ['allNotify' => $allNotify, 'count' => $countNotify];
+    }
+
+    public function getMessages() {
+        $msg_user = [];
+        $senders = Message::getSender();
+        if ($senders) {
+            foreach ($senders as $key => $sender) {
+                $msg_user[$sender['MAX(id)']] = $sender['sender'];
+            }
+        }
+        $receivers = Message::getReceiver();
+        if ($receivers) {
+            foreach ($receivers as $key => $receiver) {
+                $msg_user[$receiver['MAX(id)']] = $receiver['receiver'];
+            }
+        }
+        krsort($msg_user);
+        $msg_user = array_unique($msg_user);
+
+        $unseenUser = 0;
+        $chatHolders = [];
+        if ($msg_user) {
+            foreach ($msg_user as $key => $user_id) {
+                $user = User:: getUserById($user_id);
+                $msgUser['id'] = $user['id'];
+                $msgUser['name'] = $user['firstname'] . " " . $user['lastname'];
+                $msgUser['profile_pic'] = $user['profile_pic'];
+                $msgUser['unseen'] = 0;
+                $unseenMsg = Message::getUnseenMsg($user_id);
+                if ($unseenMsg[0]) {
+                    $msgUser['unseen'] = $unseenMsg[0];
+                    $unseenUser++;
+                }
+                $msgUser['time'] = $this->calcTime(Message::getTimeById($key));
+                $chatHolders[$user['id']] = $msgUser;
+            }
+        }
+        
+       return ['unseen' => $unseenUser, 'chatHolders' => $chatHolders];
     }
 
     public function userId() {

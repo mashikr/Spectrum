@@ -72,6 +72,12 @@ class Profile extends \Core\Controller {
             }
           }
         }
+
+      /// get messages
+      $messages = $this->getMessages();
+      $unseenMsg = $messages['unseen'];
+      $chatHolders = $messages['chatHolders'];
+
       //// get notification /////
       $notifications =  $this->getNotifications();
       $allNotify = $notifications['allNotify'];
@@ -85,7 +91,9 @@ class Profile extends \Core\Controller {
         'user' =>  $_SESSION['user'],
         'friends' => $allfriends,
         'photos' => $photos,
-        'notifications' => $allNotify
+        'notifications' => $allNotify,
+        'unseenMsg' => $unseenMsg,
+        'chatHolders' => $chatHolders
       ]);
   }
 
@@ -160,10 +168,14 @@ class Profile extends \Core\Controller {
             }
           }
         }
-      
-        //// get notification /////
-        $notifications =  $this->getNotifications();
-        $allNotify = $notifications['allNotify'];
+       /// get messages
+       $messages = $this->getMessages();
+       $unseenMsg = $messages['unseen'];
+       $chatHolders = $messages['chatHolders'];
+
+      //// get notification /////
+      $notifications =  $this->getNotifications();
+      $allNotify = $notifications['allNotify'];
 
 
       View::renderTemplate('Profile/view.html', [
@@ -175,7 +187,9 @@ class Profile extends \Core\Controller {
         'countRequest' => $countRequest,
         'photos' => $photos,
         'relation' => $relation,
-        'notifications' => $allNotify
+        'notifications' => $allNotify,
+        'unseenMsg' => $unseenMsg,
+        'chatHolders' => $chatHolders
       ]);
   }
 

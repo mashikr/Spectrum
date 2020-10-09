@@ -1,79 +1,85 @@
-<div class="d-inline-block my-1">
-    <small class="text-muted">2 min ago</small>
-    <div class="bg-light rounded py-1 px-2">
-        hello bro
-    </div>
-</div>
-
-<div class="ml-auto d-flex flex-column align-items-end my-1">
-    <small class="text-muted">1 min ago</small>
-    <div class="bg-primary text-white rounded py-1 px-2">
-        Hii
-    </div>
-</div>
-<div class="d-inline-block my-1">
-    <small class="text-muted">2 min ago</small>
-    <div class="bg-light rounded py-1 px-2">
-        hello bro
-    </div>
-</div>
-
-<div class="ml-auto d-flex flex-column align-items-end my-1">
-    <small class="text-muted">1 min ago</small>
-    <div class="bg-primary text-white rounded py-1 px-2">
-        Hii
-    </div>
-</div>
-
-<div class="d-inline-block my-1">
-    <small class="text-muted d-block">just now</small>
-    <div class="bg-light rounded d-inline-block py-1 px-2">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid, impedit soluta! Commodi fugit ut nemo at necessitatibus corrupti repellat minima ex, quibusdam aperiam nesciunt odio, est omnis. Impedit, ipsam minus.
-    </div>
-</div>
-
-<div class="ml-auto d-flex flex-column align-items-end my-1">
-    <small class="text-muted">just now</small>
-    <div class="bg-primary text-white rounded py-1 px-2">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias nostrum temporibus aliquam aliquid, necessitatibus delectus quas mollitia praesentium, modi, repellat magni? Vero incidunt id illo, est qui dignissimos! Velit, error.
-    </div>
-</div>
-<div class="d-inline-block my-1">
-    <small class="text-muted d-block">just now</small>
-    <div class="bg-light rounded d-inline-block py-1 px-2">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid, impedit soluta! Commodi fugit ut nemo at necessitatibus corrupti repellat minima ex, quibusdam aperiam nesciunt odio, est omnis. Impedit, ipsam minus.
-    </div>
-</div>
-
-<div class="ml-auto d-flex flex-column align-items-end my-1">
-    <small class="text-muted">just now</small>
-    <div class="bg-primary text-white rounded py-1 px-2">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias nostrum temporibus aliquam aliquid, necessitatibus delectus quas mollitia praesentium, modi, repellat magni? Vero incidunt id illo, est qui dignissimos! Velit, error.
-    </div>
-</div>
-<div class="d-inline-block my-1">
-    <small class="text-muted d-block">just now</small>
-    <div class="bg-light rounded d-inline-block py-1 px-2">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid, impedit soluta! Commodi fugit ut nemo at necessitatibus corrupti repellat minima ex, quibusdam aperiam nesciunt odio, est omnis. Impedit, ipsam minus.
-    </div>
-</div>
-
-<div class="ml-auto d-flex flex-column align-items-end my-1">
-    <small class="text-muted">just now</small>
-    <div class="bg-primary text-white rounded py-1 px-2">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias nostrum temporibus aliquam aliquid, necessitatibus delectus quas mollitia praesentium, modi, repellat magni? Vero incidunt id illo, est qui dignissimos! Velit, error.
-    </div>
-</div>
-<div class="d-inline-block my-1">
-    <small class="text-muted d-block">just now</small>
-    <div class="bg-light rounded d-inline-block py-1 px-2">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid, impedit soluta! Commodi fugit ut nemo at necessitatibus corrupti repellat minima ex, quibusdam aperiam nesciunt odio, est omnis. Impedit, ipsam minus.
-    </div>
-</div>
-
-<div class="ml-auto d-flex flex-column align-items-end my-1">
-    <small class="text-muted">just now</small>
-    <div class="bg-primary text-white rounded py-1 px-2">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias nostrum temporibus aliquam aliquid, necessitatibus delectus quas mollitia praesentium, modi, repellat magni? Vero incidunt id illo, est qui dignissimos! Velit, error.
-    </div>
-</div>
+{% if messages %}
+    {% for message in messages %}
+        {% if message.receiver == cur_user.id %}
+            <div>
+                <div class="d-inline-block my-1">
+                    <small class="text-muted">{{ message.time }}</small>
+                    <div class="{% if message.type == 'text'%}bg-light{% endif %} rounded py-1 px-2">
+                        {% if message.type == 'text' %}
+                            {{ message.message }}
+                        {% elseif message.type == 'emoji' %}
+                            <img height="40px" src="{{ message.message }}" alt="emoji">
+                        {% elseif message.type == 'image' %}
+                            <img class="img-fluid" src="{{ folder }}/public/messageImg/{{ message.message }}" alt="image">
+                        {% elseif message.type == 'audio' %}
+                            <audio controls>
+                                <source src="{{ folder }}/public/messageaudio/{{ message.message }}" 
+                                    type="audio/mp3">
+                            </audio>
+                        {% elseif message.type == 'video' %}
+                            <video class="img-fluid" controls>
+                                <source src="{{ folder }}/public/messagevideo/{{ message.message }}"
+                                    type="video/mp4">
+                            </video>
+                        {% elseif message.type == 'pdf' %}
+                            <a href="{{ folder }}/public/messagepdf/{{ message.message }}" download>{{ message.message }}</a>
+                            <i class="ml-1 h5 far fa-file-pdf text-warning"></i>
+                        {% elseif message.type == 'ppt' %}
+                            <a href="{{ folder }}/public/messageppt/{{ message.message }}" download>{{ message.message }}</a>
+                            <i class="ml-1 h5 far fa-file-powerpoint text-danger"></i>
+                        {% elseif message.type == 'doc' %}
+                            <a href="{{ folder }}/public/messagedoc/{{ message.message }}" download>{{ message.message }}</a>
+                            <i class="ml-1 h5 far fa-file-word text-primary"></i>
+                        {% elseif message.type == 'txt' %}
+                            <a href="{{ folder }}/public/messagetxt/{{ message.message }}" download>{{ message.message }}</a>
+                            <i class="ml-1 h5 far fa-file-alt text-secondary"></i>
+                        {% elseif message.type == 'excel' %}
+                            <a href="{{ folder }}/public/messageexcel/{{ message.message }}" download>{{ message.message }}</a>
+                            <i class="ml-1 h5 far fa-file-excel text-success"></i>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="ml-auto d-flex flex-column align-items-end my-1">
+                <small class="text-muted">{{ message.time }}</small>
+                <div class="{% if message.type == 'text'%}bg-primary px-2{% endif %} text-white rounded py-1">
+                    {% if message.type == 'text' %}
+                        {{ message.message }}
+                    {% elseif message.type == 'emoji' %}
+                        <img height="40px" src=" {{ message.message }}" alt="emoji">
+                    {% elseif message.type == 'image' %}
+                        <img class="img-fluid" src="{{ folder }}/public/messageImg/{{ message.message }}" alt="image">
+                    {% elseif message.type == 'audio' %}
+                        <audio controls>
+                            <source src="{{ folder }}/public/messageaudio/{{ message.message }}" 
+                                type="audio/mp3">
+                        </audio>
+                    {% elseif message.type == 'video' %}
+                        <video class="img-fluid" controls>
+                            <source src="{{ folder }}/public/messagevideo/{{ message.message }}"
+                                type="video/mp4">
+                        </video>
+                    {% elseif message.type == 'pdf' %}
+                        <i class="mr-1 h5 far fa-file-pdf text-warning"></i>
+                        <a href="{{ folder }}/public/messagepdf/{{ message.message }}" download>{{ message.message }}</a>
+                    {% elseif message.type == 'ppt' %}
+                        <i class="mr-1 h5 far fa-file-powerpoint text-danger"></i>
+                        <a href="{{ folder }}/public/messageppt/{{ message.message }}" download>{{ message.message }}</a>
+                    {% elseif message.type == 'doc' %}
+                        <i class="mr-1 h5 far fa-file-word text-primary"></i>
+                        <a href="{{ folder }}/public/messagedoc/{{ message.message }}" download>{{ message.message }}</a>
+                    {% elseif message.type == 'txt' %}
+                        <i class="mr-1 h5 far fa-file-alt text-secondary"></i>
+                        <a href="{{ folder }}/public/messagetxt/{{ message.message }}" download>{{ message.message }}</a>
+                    {% elseif message.type == 'excel' %}
+                        <i class="mr-1 h5 far fa-file-excel text-success"></i>
+                        <a href="{{ folder }}/public/messageexcel/{{ message.message }}" download>{{ message.message }}</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <div class="lead text-center mt-4">Start a conversation</div>
+{% endif %}

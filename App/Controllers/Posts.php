@@ -113,6 +113,11 @@ class Posts extends \Core\Controller {
             }
         }
 
+        /// get messages
+        $messages = $this->getMessages();
+        $unseenMsg = $messages['unseen'];
+        $chatHolders = $messages['chatHolders'];
+
         //// get notification /////
         $notifications =  $this->getNotifications();
         $allNotify = $notifications['allNotify'];
@@ -124,7 +129,9 @@ class Posts extends \Core\Controller {
             'posts' => $allPost,
             'comments' => $allcomments,
             'author' => $post_author,
-            'notifications' => $allNotify
+            'notifications' => $allNotify,
+            'unseenMsg' => $unseenMsg,
+            'chatHolders' => $chatHolders
         ]);
     }
 
@@ -137,6 +144,38 @@ class Posts extends \Core\Controller {
             Flash::addMessage("Deleting fail", 'failed');
         }
         $this->redirect('/profile');
+    }
+
+    public function editAction() {
+        $this->before();
+
+        $post = Post::getPostById($this->route_params['id']);
+
+        $showback = 0;
+        if (isset($_SESSION['update'])) {
+            $showback = 1;
+            unset($_SESSION['update']);
+        }
+
+        View::renderTemplate('Post/edit.html', [
+            'post_id' => $post['id'],
+            'content' => $post['content'],
+            'privacy' => $post['privacy'],
+            'showBack' => $showback
+        ]);
+    }
+
+    public function updatePostAction() {
+        $this->before();
+
+        if ($_POST) {
+            
+            if (Post::updatePost($_POST['id'], $_POST['post'], $_POST['privacy'])) {
+                $_SESSION['update'] = true;
+            }
+            $this->redirect('/posts/edit/' . $_POST['id']);
+           
+        }
     }
 }
 

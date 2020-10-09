@@ -98,6 +98,10 @@ $(document).ready(function() {
             $('.chat-emoji-body[data-target="toast-emoji"').addClass('d-none');
         }
 
+        if (!e.target.matches('#msg-chat-emoji, #msg-chat-emoji *')) {
+            $('#msg-chat-emoji .chat-emoji-body').addClass('d-none');
+        }
+
         if (!e.target.matches('.post-option, .post-option *')) {
             $('.post-option-dropdown').addClass('d-none');
         }
@@ -111,11 +115,59 @@ $(document).ready(function() {
 
 
     ////// chat toast toggle ////
-    $('.message-link').click(function() {
+    function messageLinkEvent() {
+        $('.message-link').click(function() {
+            var user_id = $(this).attr("data-id");
+            var name = $(this).children().children("b").text();
+            var pic = $(this).children().children("img").attr('src');
+            
+            $('.msg-user-id').val(user_id);
+            $('#messages-dropdown').removeClass('top-3');
+            showToastWithMsg(user_id,name,pic);
+        });
+    }
+    messageLinkEvent();
+
+    function showToastWithMsg(user_id,name,pic) {
         $('#msg-toast').addClass('show-toast');
-        $('#messages-dropdown').removeClass('top-3');
+        $('.toast-header').children().children('img').attr('src', pic);
+        $('.toast-header').children('strong').text(name);
+        $('#send-msg-toast').attr('data-id', user_id);
         
-        scrollToastChatBody();
+        $('#sendText').val('');
+        $('#chat-body').html('<div class="text-center mt-5"><i class="fas fa-spinner fa-spin fa-2x"></i></div>');
+
+        $.post(folder + "/ajax/getMessage",
+            {
+                id: user_id 
+            },function (response, status) {
+            if (status == 'success') {
+                response = JSON.parse(response);
+                if (response.status == true) {
+                    if (response.unseen) {
+                        $('#messageUnseen').text(response.unseen);
+                    } else {
+                        $('#messageUnseen').text('');
+                    }
+                    $('#messagesDropdown').html(response.chatHolder);
+                    $('#chat-body').html(response.messages);
+
+                    scrollToastChatBody();
+                    messageLinkEvent();
+                } else {
+                    $('#failed-msg').show().fadeOut(5000);
+                }
+            } else {
+                $('#failed-msg').show().fadeOut(5000);
+            }
+        });
+    }
+
+    $('#messageUser').click(function() {
+        var user_id = $('#username').attr("data-id");
+        var name = $('#username').text();
+        var pic = $('.profile-img-overlay').children().children("img").attr('src');
+        showToastWithMsg(user_id,name,pic);
     });
 
     $('#toast-close').click(function() {
@@ -123,7 +175,97 @@ $(document).ready(function() {
         $('#toast-emoji .chat-emoji-body').addClass('d-none');
     });
     
-   
+   /// send messages
+   function sendMessage(id,message,type) {
+        $.post(folder + "/ajax/sendMessage",
+            {
+                id: id,
+                message: message,
+                type: type
+            },function (response, status) {
+            if (status == 'success') {
+                response = JSON.parse(response);
+                if (response.status == true) {
+                    $('#messagesDropdown').html(response.chatHolder);
+                    $('#chat-body').html(response.messages);
+                    scrollToastChatBody();
+                    messageLinkEvent();
+                } else {
+                    $('#failed-msg').show().fadeOut(5000);
+                }
+            } else {
+                $('#failed-msg').show().fadeOut(5000);
+            }
+        });
+   }
+   $('#sendText').keyup(function(e) {
+        if (e.keyCode == 13) {
+            var id = $('#send-msg-toast').attr('data-id');
+            var message = $(this).val();
+            $(this).val('');
+            sendMessage(id,message,'text');
+        }
+   });
+
+   $('#sendImage').change(function() {
+        $.ajax({
+            type: 'POST',
+            url: folder + '/ajax/sendImage',
+            data: new FormData ($('#sendImageForm')[0]),
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response.includes("<b>Warning</b>:  POST Content-Length of")) {
+                    $('#failed-msg').html('<div class="alert alert-danger"><strong>File sixe limit exceed!</strong></div>').show().fadeOut(5000);
+                } else {
+                    response = JSON.parse(response)
+                    if (response.status == true) {
+                        $('#messagesDropdown').html(response.chatHolder);
+                        $('#chat-body').html(response.messages);
+                        scrollToastChatBody();
+                        messageLinkEvent();
+                    } else if (response.status == false) {
+                        if (response.msg = 'invalid') {
+                            $('#failed-msg').html('<div class="alert alert-danger"><strong>This file isn\'t valid!</strong></div>').show().fadeOut(5000);
+                        } else {
+                            $('#failed-msg').html('<div class="alert alert-danger"><strong>Image send failed!</strong></div>').show().fadeOut(5000);
+                        }
+                    }
+                }
+            }
+        });
+        $('#failed-msg').html('<div class="alert alert-danger"><strong>Something went wrong!</strong></div>');
+    });
+
+    $('#sendFile').change(function() {
+        $.ajax({
+            type: 'POST',
+            url: folder + '/ajax/sendFile',
+            data: new FormData ($('#sendFileForm')[0]),
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response.includes("<b>Warning</b>:  POST Content-Length of")) {
+                    $('#failed-msg').html('<div class="alert alert-danger"><strong>File sixe limit exceed!</strong></div>').show().fadeOut(5000);
+                } else {
+                    response = JSON.parse(response)
+                    if (response.status == true) {
+                        $('#messagesDropdown').html(response.chatHolder);
+                        $('#chat-body').html(response.messages);
+                        scrollToastChatBody();
+                        messageLinkEvent();
+                    } else if (response.status == false) {
+                        if (response.msg = 'invalid') {
+                            $('#failed-msg').html('<div class="alert alert-danger"><strong>This file isn\'t valid!</strong></div>').show().fadeOut(5000);
+                        } else {
+                            $('#failed-msg').html('<div class="alert alert-danger"><strong>Image send failed!</strong></div>').show().fadeOut(5000);
+                        }
+                    }
+                }
+            }
+        });
+        $('#failed-msg').html('<div class="alert alert-danger"><strong>Something went wrong!</strong></div>');
+    });
 
     //// toggle emoji body ////
     $('.chat-emoji').off().click(function() {
@@ -132,8 +274,10 @@ $(document).ready(function() {
         if (target == 'toast-emoji') {
             $(this).parent().children('.chat-emoji-body').html(emojis).toggleClass('d-none');
             $(this).parent().children('.chat-emoji-body').children('.emoji').off().click(function() {
-                console.log('toast');
-                console.log($(this).attr('src'));
+                var id = $('#send-msg-toast').attr('data-id');
+                var message = $(this).attr('src');
+                $('.chat-emoji-body[data-target="toast-emoji"').addClass('d-none');
+                sendMessage(id,message,'emoji');
             });
         } else if(target == 'comment-emoji') {
             $(this).parent().children('.chat-emoji-body').html(emojis).toggleClass('d-none');
@@ -164,8 +308,30 @@ $(document).ready(function() {
         } else {
             $('#msg-chat-emoji .chat-emoji-body').html(emojis).toggleClass('d-none');
             $('#msg-chat-emoji .emoji').off().click(function() {
-                console.log('chat');
-                console.log($(this).attr('src'));
+                var message = $(this).attr('src');
+                var id = $('#chatUser').attr('data-id');
+                $('#msg-chat-emoji .chat-emoji-body').toggleClass('d-none');
+                
+                $.post(folder + "/ajax/sendMessage",
+                    {
+                        id: id,
+                        message: message,
+                        type: 'emoji',
+                        page: 'msg'
+                    },function (response, status) {
+                    if (status == 'success') {
+                        response = JSON.parse(response);
+                        if (response.status == true) {
+                            $('#chatHolders').html(response.chatHolder);
+                            $('#message-body').html(response.messages);
+                            $('#message-body').scrollTop($('#message-body')[0].scrollHeight);
+                        } else {
+                            $('#failed-msg').show().fadeOut(5000);
+                        }
+                    } else {
+                        $('#failed-msg').show().fadeOut(5000);
+                    }
+                });
             });
         }
             
@@ -384,7 +550,7 @@ $(document).ready(function() {
 
     /// tost chat body scroll ///
    function scrollToastChatBody() {
-        $('#chat-body').scrollTop($('#chat-body')[0].scrollHeight);
+        $('#chat-body').animate({scrollTop: $('#chat-body')[0].scrollHeight});
    }
 
 });

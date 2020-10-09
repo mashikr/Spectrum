@@ -44,7 +44,7 @@
                                 {% if page != 'post' %}
                                     <a href="{{ url_root }}/post/{{ post.id }}" class="btn btn-sm btn-light mb-1">View details</a>
                                 {% endif %}
-                                <a href="{{ url_root }}/post/edit/{{ post.id }}" class="btn btn-sm btn-warning mb-1">Edit post</a>
+                                <a href="{{ url_root }}/posts/edit/{{ post.id }}" class="btn btn-sm btn-warning mb-1">Edit post</a>
                                 <a href="{{ url_root }}/posts/delete/{{ post.id }}" onclick="javascript: return confirm('Are you sure want to delete?');" class="btn btn-sm btn-danger">Delete</a>
                             </div>
                         </button>
@@ -69,27 +69,27 @@
                         </audio>
                     {% elseif post.type == 'pdf' %}
                         <div class="mt-2 btn btn-light">
-                            <a href="{{ folder }}/public/audio/{{ post.file_name }}">{{ post.file_name }}</a>
+                            <a href="{{ folder }}/public/pdf/{{ post.file_name }}" download>{{ post.file_name }}</a>
                             <i class="ml-2 h4 far fa-file-pdf text-warning"></i>
                         </div>
                     {% elseif post.type == 'txt' %}
                         <div class="mt-2 btn btn-light">
-                            <a href="{{ folder }}/public/txt/{{ post.file_name }}">{{ post.file_name }}</a>
+                            <a href="{{ folder }}/public/txt/{{ post.file_name }}" download>{{ post.file_name }}</a>
                             <i class="ml-2 h4 far fa-file-alt text-secondary"></i>
                         </div>
                     {% elseif post.type == 'doc' %}
                         <div class="mt-2 btn btn-light">
-                            <a href="{{ folder }}/public/doc/{{ post.file_name }}">{{ post.file_name }}</a>
+                            <a href="{{ folder }}/public/doc/{{ post.file_name }}" download>{{ post.file_name }}</a>
                             <i class="ml-2 h4 far fa-file-word text-primary"></i>
                         </div>
                     {% elseif post.type == 'ppt' %}
                         <div class="mt-2 btn btn-light">
-                            <a href="{{ folder }}/public/ppt/{{ post.file_name }}">{{ post.file_name }}</a>
+                            <a href="{{ folder }}/public/ppt/{{ post.file_name }}" download>{{ post.file_name }}</a>
                             <i class="ml-2 h4 far fa-file-powerpoint text-danger"></i>
                         </div>
                     {% elseif post.type == 'excel' %}
                         <div class="mt-2 btn btn-light">
-                            <a href="{{ folder }}/public/excel/{{ post.file_name }}">{{ post.file_name }}</a>
+                            <a href="{{ folder }}/public/excel/{{ post.file_name }}" download>{{ post.file_name }}</a>
                             <i class="ml-2 h4 far fa-file-excel text-success"></i>
                         </div>
                     {% endif %}

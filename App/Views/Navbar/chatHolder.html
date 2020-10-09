@@ -1,0 +1,14 @@
+<div class="d-flex flex-column p-2 bg-white rounded shadow" id="messages-dropdown">
+    <div class="dropdown-inner">
+        {% for chatHolder in chatHolders %}
+            <span class="btn btn-light {% if chatHolder.unseen %}alert-primary{% endif %} btn-block mb-1 message-link" data-id="{{ chatHolder.id }}">
+                <div class="profile-icon-img-overlay mr-2 float-left">
+                    <img src="{{ folder }}/public/img/{{ chatHolder.profile_pic }}" alt="user Icon">
+                </div> 
+                <div class="text-left"><b>{{ chatHolder.name }}</b><span class="badge badge-danger float-right">{% if chatHolder.unseen %}{{ chatHolder.unseen }}{% endif %}</span><br>
+                    <small class="text-muted">{{ chatHolder.time }}</small>
+                </div>
+            </span>
+        {% endfor %}     
+    </div>
+</div>

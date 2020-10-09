@@ -8,6 +8,7 @@ use \App\Models\Post;
 use \App\Models\UpdateProfile;
 use \App\Models\Findfriend;
 use \App\Models\Notification;
+use \App\Models\Message;
 
 class Ajax extends \Core\Controller {
 
@@ -365,6 +366,167 @@ class Ajax extends \Core\Controller {
                 echo true;
             } else {
                 echo false;
+            }
+        }
+    }
+
+    public function getMessageAction() {
+        $this->before();
+
+        if ($_POST['id']) {
+            
+            $messages = Message::getMessage($_POST['id']);
+            $allmessages = [];
+            if ($messages) {
+                foreach ($messages as $message) {
+                    $message['time'] = $this->calcTime($message['time']);
+                    array_push($allmessages, $message);
+                }
+            }
+            
+            Message::seenMsg($_POST['id']);
+
+            /// get messages
+            $messageHolders = $this->getMessages();
+            $unseenMsg = $messageHolders['unseen'];
+            $chatHolders = $messageHolders['chatHolders'];
+
+            echo json_encode([
+                'status' => true,
+                'unseen' => $unseenMsg,
+                'chatHolder' => View::getTemplate('Navbar/chatHolder.html', [
+                        'chatHolders' =>  $chatHolders
+                    ]),
+                'messages' => View::getTemplate('Messages/messages.html', [
+                    'messages' => $allmessages
+                    ])
+                ]);
+        }
+    }
+    
+    public function sendMessageAction() {
+        $this->before();
+
+        if ($_POST) {
+            if (Message::sendMessage($_POST['id'], $_POST['message'], $_POST['type'])) {
+                if (isset($_POST['page']) && $_POST['page'] == 'msg') {
+                    echo $this->messageHelper($_POST['id']);
+                } else {
+                    echo $this->sendMessageHelper($_POST['id']);
+                }
+            } else {
+                echo json_encode(['status' => false]);
+            }
+        }
+    }
+
+    protected function sendMessageHelper($id) {
+        $messages = Message::getMessage($id);
+        $allmessages = [];
+        if ($messages) {
+            foreach ($messages as $message) {
+                $message['time'] = $this->calcTime($message['time']);
+                array_push($allmessages, $message);
+            }
+        }
+
+        /// get messages
+        $messageHolders = $this->getMessages();
+        $chatHolders = $messageHolders['chatHolders'];
+
+        return json_encode([
+            'status' => true,
+            'chatHolder' => View::getTemplate('Navbar/chatHolder.html', [
+                    'chatHolders' =>  $chatHolders
+                ]),
+            'messages' => View::getTemplate('Messages/messages.html', [
+                'messages' => $allmessages
+                ])
+            ]);
+    }
+
+    protected function messageHelper($id) {
+        $messages = Message::getMessage($id);
+        $allmessages = [];
+        if ($messages) {
+            foreach ($messages as $message) {
+                $message['time'] = $this->calcTime($message['time']);
+                array_push($allmessages, $message);
+            }
+        }
+
+        /// get messages
+        $messageHolders = $this->getMessages();
+        $chatHolders = $messageHolders['chatHolders'];
+
+        return json_encode([
+            'status' => true,
+            'chatHolder' => View::getTemplate('Messages/chatHolder.html', [
+                    'chatHolders' =>  $chatHolders
+                ]),
+            'messages' => View::getTemplate('Messages/messages.html', [
+                'messages' => $allmessages
+                ])
+            ]);
+    }
+
+    public function sendImageAction() {
+        $this->before();
+        
+        if ($_POST) {
+            $user_id = $_POST['user_id'];
+            $file_name = $_FILES['send-image']['name'];
+            $file = $_FILES['send-image']['tmp_name'];
+            $type = $this->fileType($file_name, $_FILES['send-image']['type']);
+
+            if ($type != "photo") {
+                echo json_encode(['status' => false, 'msg' => 'invalid']);
+                return;
+            }
+
+            if (!move_uploaded_file($file, "../public/messageImg/$file_name")) {
+                echo json_encode(['status' => false, 'msg' => 'failed']);
+                return;
+            }
+
+            if (Message::sendMessage($user_id, $file_name, 'image')) {
+                if (isset($_POST['page']) && $_POST['page'] == 'msg') {
+                    echo $this->messageHelper($user_id);
+                } else {
+                    echo $this->sendMessageHelper($user_id);
+                }
+            } else {
+                echo json_encode(['status' => false, 'msg' => 'failed']);
+            }
+        }
+    }
+
+    public function sendFileAction() {
+        $this->before();
+        
+        if ($_POST) {
+            $user_id = $_POST['user_id'];
+            $file_name = $_FILES['send-file']['name'];
+            $file = $_FILES['send-file']['tmp_name'];
+            $type = $this->fileType($file_name, $_FILES['send-file']['type']);
+
+            if ($type == "invalid" || $type == "photo") {
+                echo json_encode(['status' => false, 'msg' => 'invalid']);
+                return;
+            }
+
+            if (!move_uploaded_file($file, "../public/message$type/$file_name")) {
+                echo json_encode(['status' => false, 'msg' => 'failed']);
+                return;
+            }
+            if (Message::sendMessage($user_id, $file_name, $type)) {
+                if (isset($_POST['page']) && $_POST['page'] == 'msg') {
+                    echo $this->messageHelper($user_id);
+                } else {
+                    echo $this->sendMessageHelper($user_id);
+                }
+            } else {
+                echo json_encode(['status' => false, 'msg' => 'failed']);
             }
         }
     }
