@@ -22,7 +22,7 @@ A social media using PHP MVC model. Features collect from facebook.
 2. [Php Mailer](https://github.com/PHPMailer/PHPMailer) (For sending mail)
 3. [Pusher](https://pusher.com) (Real time data sender)
 
-### Preview app:
+### App preview:
 ![spectrum app homepage](https://github.com/mashikr/Spectrum/blob/master/public/projectDemo/home.PNG)
 ![spectrum app profile](https://github.com/mashikr/Spectrum/blob/master/public/projectDemo/profile.PNG)
 ![spectrum app profile](https://github.com/mashikr/Spectrum/blob/master/public/projectDemo/message.PNG)
