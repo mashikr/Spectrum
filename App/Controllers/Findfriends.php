@@ -102,6 +102,26 @@ class Findfriends extends \Core\Controller {
         $id = $this->route_params['id'];
         Findfriend::sendRequest($id);
 
+        /// get friends requests ////
+        $Requests = $this->getRequest($id);
+        $allRequests = $Requests['requests'];
+        $countRequest = 0;
+        if ($allRequests) {
+          foreach ($allRequests as $request) {
+            if ($request['seen'] == 0) {
+              $countRequest++;
+            }
+          }
+        }
+
+        $data = [
+            'sender' =>  $_SESSION['user']['name'],
+            'count' =>  $countRequest,
+            'reqdropdown' => View::getTemplate("Navbar/friendReq.html", ['friendsRrequests' => $allRequests])
+        ];
+        
+        $this->pusher->trigger('friendReq', 'to-'.$id, $data);
+
         $this->redirect("/profile/$id");
     }
     
@@ -110,6 +130,25 @@ class Findfriends extends \Core\Controller {
 
         $id = $this->route_params['id'];
         Findfriend::cancelRequest($id);
+
+        /// get friends requests ////
+        $Requests = $this->getRequest($id);
+        $allRequests = $Requests['requests'];
+        $countRequest = 0;
+        if ($allRequests) {
+          foreach ($allRequests as $request) {
+            if ($request['seen'] == 0) {
+              $countRequest++;
+            }
+          }
+        }
+
+        $data = [
+            'count' =>  $countRequest,
+            'reqdropdown' => View::getTemplate("Navbar/friendReq.html", ['friendsRrequests' => $allRequests])
+        ];
+        
+        $this->pusher->trigger('friendReq', 'to-'.$id, $data);
 
         $this->redirect("/profile/$id");
     }
@@ -144,6 +183,19 @@ class Findfriends extends \Core\Controller {
         Findfriend::declineRequest($id);
 
         Notification::acceptReqNotify($id);
+
+         ////// get notification /////
+        $notifications =  $this->getNotifications($id);
+        $allNotify = $notifications['allNotify'];
+        $countNotify = $notifications['count'];
+
+        $data = [
+            'sender' =>  $_SESSION['user']['name'],
+            'category' => 'friendReq',
+            'count' =>  $countNotify,
+            'notifydropdown' => View::getTemplate("Navbar/notificationDropdown.html", ['notifications' => $allNotify])
+        ];
+        $this->pusher->trigger('notification', 'to-'.$id, $data);
 
         $this->redirect("/profile/$id");
     }

@@ -1,0 +1,14 @@
+{% if searchItems %}
+    <div class="d-flex flex-column p-2 bg-white rounded shadow" id="search-dropdown">
+        <div class="dropdown-inner">
+            {% for searchItem in searchItems %}
+                <a href="{{ url_root }}/profile/{{ searchItem.id }}" class="btn btn-light btn-block mb-1 d-flex align-items-center">
+                    <div class="profile-icon-img-overlay mr-2 float-left">
+                        <img src="{{ folder }}/public/img/{{ searchItem.profile_pic }}" alt="user Icon">
+                    </div> 
+                    <b>{{ searchItem.firstname }} {{ searchItem.lastname }}</b>
+                </a>                        
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}

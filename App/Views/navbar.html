@@ -10,9 +10,10 @@
         </button>
     
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-        <form class="form-inline my-2 my-md-0">
-            <input class="form-control col-8 form-control-sm mr-2" type="search" placeholder="Search">
-            <button class="btn btn-sm btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+        <form class="form-inline my-2 my-md-0 position-relative">
+            <input class="form-control form-control-sm mr-2" type="search" placeholder="Search" id="searchInput">
+            <!-- <button class="btn btn-sm btn-outline-light my-2 my-sm-0" type="submit">Search</button> -->
+            <div id="searchList"></div>
         </form>
         <ul class="navbar-nav ml-auto mt-2 mt-md-0">
 
@@ -38,22 +39,9 @@
                         
                     </span>
 
-                    {% if friendsRrequests %}
-                        <div class="d-flex flex-column p-2 bg-white rounded shadow" id="friend-request-dropdown">
-                            <div class="dropdown-inner">
-                                {% for request in friendsRrequests %}
-                                    <a href="{{ url_root }}/profile/{{ request.sender }}" class="btn {% if request.seen == 0 %}alert-primary{% endif %} btn-light mb-1">
-                                        <div class="profile-icon-img-overlay mr-2 float-left">
-                                            <img src="{{ folder }} /public/img/{{ request.profile_pic }}" alt="{{ request.firstname }} {{ request.lastname }}">
-                                        </div> 
-                                    <div class="text-left ml-5"><b>{{ request.firstname }} {{ request.lastname }}</b> send you a friend request. <br>
-                                            <small class="text-muted ml-2">{{ request.time }}</small>
-                                        </div>
-                                    </a>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    {% endif %}
+                   <div id="reqDropdown">
+                        {{ include("Navbar/friendReq.html") }}
+                   </div>
                 </li>
             {% endif %}
            
@@ -62,10 +50,10 @@
             
             {% if page != 'messages' %}
                 <li class="nav-item d-md-none  pointer">
-                    <a class="nav-link" href="{{ url_root }}/messages" title="Messages"><i class="far fa-comments"></i><sup class="badge badge-danger">{% if unseenMsg %}{{ unseenMsg }}{% endif %}</sup></a>
+                    <a class="nav-link messages" href="{{ url_root }}/messages" title="Messages"><i class="far fa-comments"></i><sup class="badge badge-danger">{% if unseenMsg %}{{ unseenMsg }}{% endif %}</sup></a>
                 </li>
                 <li class="nav-item d-none d-md-block position-relative pointer">
-                    <span class="nav-link pointer" title="Messages" id="messages"><i class="far fa-comments"></i><sup id="messageUnseen" class="badge badge-danger">{% if unseenMsg %}{{ unseenMsg }}{% endif %}</sup></span>
+                    <span class="nav-link pointer messages" title="Messages" id="messages"><i class="far fa-comments"></i><sup id="messageUnseen" class="badge badge-danger">{% if unseenMsg %}{{ unseenMsg }}{% endif %}</sup></span>
                     
                     <div id="messagesDropdown">
                         {% if chatHolders %}
@@ -82,47 +70,9 @@
                 <li class="nav-item d-none d-md-block position-relative pointer">
                     <span class="nav-link notification" title="Notification" id="notification"><i class="fas fa-bell"></i><sup class="badge badge-danger">{% if countNotify %}{{ countNotify }}{% endif %}</sup></span>
 
-                    {% if notifications %}
-                        <div class="d-flex flex-column p-2 bg-white rounded shadow" id="notification-dropdown">
-                            <div class="dropdown-inner">
-                                {% for notification in notifications %}
-
-                                    {% if notification.notify_type == 'like' %}
-                                        <a href="{{ url_root }}/post/{{ notification.post_id }}" class="btn btn-light {% if notification.seen == 0 %}alert-primary{% endif %} mb-1 notification-item">
-                                            <div class="profile-icon-img-overlay d-block mr-2 float-left">
-                                                <img src="{{ folder }} /public/img/{{ notification.profile_pic }}" alt="user Icon">
-                                            </div>
-                                            <div class="text-left ml-5"><b>{{ notification.firstname }} {{ notification.lastname }}</b> likes your {% if notification.type == 'profile_pic' %}profile photo {% elseif notification.type == 'cover_pic' %}cover photo{% else %}{{ notification.type }}{% endif %}. <i class="fas fa-thumbs-up text-primary"></i> <br>
-                                                <small class="text-muted ml-1">{{ notification.time }}</small>
-                                            </div>
-                                        </a>
-                                    {% endif %}
-
-                                    {% if notification.notify_type == 'comment' %} 
-                                        <a href="{{ url_root }}/post/{{ notification.post_id }}" class="btn btn-light {% if notification.seen == 0 %}alert-primary{% endif %} mb-1 notification-item">
-                                            <div class="profile-icon-img-overlay d-block mr-2 float-left">
-                                                <img src="{{ folder }} /public/img/{{ notification.profile_pic }}" alt="user Icon">
-                                            </div> 
-                                            <div class="text-left ml-5"><b>{{ notification.firstname }} {{ notification.lastname }}</b> comments in your {% if notification.type == 'profile_pic' %}profile photo {% elseif notification.type == 'cover_pic' %}cover photo{% else %}{{ notification.type }}{% endif %}.  <i class="fas fa-comment-alt text-success"></i> <br>
-                                                <small class="text-muted ml-1">{{ notification.time }}</small>
-                                            </div>
-                                        </a>                
-                                    {% endif %}
-
-                                    {% if notification.notify_type == 'friendReq' %} 
-                                    <a href="{{ url_root }}/profile/{{ notification.sender }}" class="btn btn-light {% if notification.seen == 0 %}alert-primary{% endif %} mb-1 notification-item">
-                                        <div class="profile-icon-img-overlay d-block mr-2 float-left">
-                                            <img src="{{ folder }} /public/img/{{ notification.profile_pic }}" alt="user Icon">
-                                        </div> 
-                                        <div class="text-left ml-5"><b>{{ notification.firstname }} {{ notification.lastname }}</b> accept your friend request. <i class="fas fa-user-friends text-primary"></i> <br>
-                                            <small class="text-muted ml-1">{{ notification.time }}</small>
-                                        </div>
-                                    </a>                 
-                                    {% endif %}                   
-                                {% endfor %}
-                            </div>
-                         </div>
-                    {% endif %}
+                    <div id="notifyDropdown">
+                        {{ include("Navbar/notificationDropdown.html") }}
+                   </div>
                 </li>
             {% endif %}
 
@@ -138,6 +88,10 @@
   <div id="failed-msg">
       <div class="alert alert-danger">
         <strong>Something wrong!</strong>
+      </div>
+  </div>
+  <div id="notify-msg">
+      <div class="alert alert-primary"> notification
       </div>
   </div>
 

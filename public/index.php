@@ -15,7 +15,19 @@ error_reporting(E_ALL);
 set_error_handler('Core\Error::errorHandler');
 set_exception_handler('Core\Error::exceptionHandler');
 
-$router = new Core\Router();
+    $options = array(
+        'cluster' => 'ap2',
+        'useTLS' => true
+    );
+    $pusher = new Pusher\Pusher(
+        'de7fc67bed3f21045303',
+        '55352172980ae352b34f',
+        '1081869',
+        $options
+    );
+
+
+$router = new Core\Router($pusher);
 
 
 // Add the routes

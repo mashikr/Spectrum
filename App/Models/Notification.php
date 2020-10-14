@@ -36,8 +36,11 @@ class Notification extends \Core\Model {
         return $stmt->execute();
     }
 
-    public static function getacceptReqNotify() {
+    public static function getacceptReqNotify($id = null) {
         $user_id = $_SESSION['user_id'];
+        if ($id) {
+            $user_id = $id;
+        }
         $sql = "SELECT friendreqnotify.*,users.firstname,users.lastname,users.profile_pic FROM `friendreqnotify` LEFT JOIN users ON users.id = friendreqnotify.sender WHERE `receiver` = $user_id";
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -46,8 +49,11 @@ class Notification extends \Core\Model {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function getlikesNotify() {
+    public static function getlikesNotify($id) {
         $user_id = $_SESSION['user_id'];
+        if ($id) {
+            $user_id = $id;
+        }
         $sql = "SELECT likesnotify.*,users.firstname,users.lastname,users.profile_pic,posts.type,posts.author_id FROM `likesnotify` LEFT JOIN users ON users.id = likesnotify.sender_id LEFT JOIN posts ON posts.id = likesnotify.post_id WHERE posts.author_id = $user_id";
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -56,8 +62,11 @@ class Notification extends \Core\Model {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function getcommentNotify() {
+    public static function getcommentNotify($id) {
         $user_id = $_SESSION['user_id'];
+        if ($id) {
+            $user_id = $id;
+        }
         $sql = "SELECT commentnotify.*,users.firstname,users.lastname,users.profile_pic,posts.type,posts.author_id FROM `commentnotify` LEFT JOIN users ON users.id = commentnotify.sender_id LEFT JOIN posts ON posts.id = commentnotify.post_id WHERE posts.author_id = $user_id";
         $db = static::getDB();
         $stmt = $db->prepare($sql);

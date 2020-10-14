@@ -215,8 +215,12 @@ class Post extends \Core\Model {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public static function getPostAuthor($post_id) {
+    public static function getPostAuthor($post_id, $type) {
         $post = static::getPostById($post_id);
+
+        if ($type) {
+            return ['author' => $post['author_id'], 'type' => $post['type']];
+        }
         return $post['author_id'];
     }
 

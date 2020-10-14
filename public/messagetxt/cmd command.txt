@@ -1,0 +1,12 @@
+color
+mkdir
+rmdir
+cd Desktop
+cd..
+echo >index.txt
+echo Ashikur rahman> index1.txt
+copy index.txt index1.txt
+move index1.txt new.txt
+type new.txt
+dir *.png
+wmic logicaldisk get name

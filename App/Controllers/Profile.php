@@ -150,12 +150,13 @@ class Profile extends \Core\Controller {
           $post['firstname'] = $user['firstname'];
           $post['lastname'] = $user['lastname'];
           $post['profile_pic'] = $user['profile_pic'];
+          $post['like'] = Post::isLiked($post['id']);
           
           array_push($allPost, $post);
         }
       }
 
-      //print_r($allfriends);
+      //print_r($allPost);
 
       /// get friends requests ////
       $allRequests = $this->getRequest();

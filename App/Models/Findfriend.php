@@ -48,12 +48,16 @@ class Findfriend extends \Core\Model {
         return $stmt->execute();
     }
 
-    public static function getRequest() {
+    public static function getRequest($id = null) {
+        $user_id =  $_SESSION['user_id'];
+        if ($id) {
+            $user_id = $id;
+        }
         $sql = "SELECT friend_request.*,users.firstname,users.lastname,users.profile_pic FROM `friend_request` LEFT JOIN users ON users.id = friend_request.sender WHERE friend_request.`receiver` = :id ORDER BY id DESC";
         $db = static::getDB();
         $stmt = $db->prepare($sql);
 
-        $stmt->bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt->bindValue(':id', $user_id, PDO::PARAM_INT);
         $stmt->execute();
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

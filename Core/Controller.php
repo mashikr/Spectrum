@@ -8,10 +8,12 @@ use \App\Models\Message;
 
 abstract class Controller {
     protected $route_params = [];
+    protected $pusher = '';
 
-    public function  __construct($route_params) {
+    public function  __construct($route_params, $push) {
         $this->route_params = $route_params;
         $this->userId();
+        $this->pusher = $push;
     }
 
     public function __call($name, $args) {
@@ -134,7 +136,11 @@ abstract class Controller {
     }
 
     public function getRequest($id = null) {
-        $requests = Findfriend::getRequest();
+        if ($id == 1 || $id == null) {
+            $requests = Findfriend::getRequest();
+        } else {
+            $requests = Findfriend::getRequest($id);
+        }
         $allRequests = [];
         $friendReqId = [];
         if ($requests) {
@@ -145,17 +151,16 @@ abstract class Controller {
             }
         }
 
-        if ($id) {
+        if ($id == true) {
             return ['requests' => $allRequests, 'ids' => $friendReqId];
         }
-
         return $allRequests;
     }
 
-    public function getNotifications() {
+    public function getNotifications($id = null) {
         $allNotify = [];
         $countNotify = 0;
-        $reqNotifys = Notification::getacceptReqNotify();
+        $reqNotifys = Notification::getacceptReqNotify($id);
         if ($reqNotifys) {
             foreach ($reqNotifys as $key => $reqNotify) {
                 $reqNotify['time'] = $this->calcTime($reqNotify['date-time']);
@@ -168,7 +173,7 @@ abstract class Controller {
             }
         }
 
-        $likesNotifys = Notification:: getlikesNotify();
+        $likesNotifys = Notification:: getlikesNotify($id);
         if ($likesNotifys) {
             foreach ($likesNotifys as $key => $likesNotify) {
                 $likesNotify['time'] = $this->calcTime($likesNotify['date-time']);
@@ -180,7 +185,7 @@ abstract class Controller {
                 $allNotify[$key] = $likesNotify;
             }
         }
-        $commentNotifys = Notification:: getcommentNotify();
+        $commentNotifys = Notification:: getcommentNotify($id);
         if ($commentNotifys) {
             foreach ($commentNotifys as $key => $commentNotify) {
                 $commentNotify['time'] = $this->calcTime($commentNotify['date-time']);

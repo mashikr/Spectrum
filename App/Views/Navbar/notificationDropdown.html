@@ -1,0 +1,41 @@
+{% if notifications %}
+    <div class="d-flex flex-column p-2 bg-white rounded shadow" id="notification-dropdown">
+        <div class="dropdown-inner">
+            {% for notification in notifications %}
+
+                {% if notification.notify_type == 'like' %}
+                    <a href="{{ url_root }}/post/{{ notification.post_id }}" class="btn btn-light {% if notification.seen == 0 %}alert-primary{% endif %} mb-1 notification-item">
+                        <div class="profile-icon-img-overlay d-block mr-2 float-left">
+                            <img src="{{ folder }} /public/img/{{ notification.profile_pic }}" alt="user Icon">
+                        </div>
+                        <div class="text-left ml-5"><b>{{ notification.firstname }} {{ notification.lastname }}</b> likes your {% if notification.type == 'profile_pic' %}profile photo {% elseif notification.type == 'cover_pic' %}cover photo{% else %}{{ notification.type }}{% endif %}. <i class="fas fa-thumbs-up text-primary"></i> <br>
+                            <small class="text-muted ml-1">{{ notification.time }}</small>
+                        </div>
+                    </a>
+                {% endif %}
+
+                {% if notification.notify_type == 'comment' %} 
+                    <a href="{{ url_root }}/post/{{ notification.post_id }}" class="btn btn-light {% if notification.seen == 0 %}alert-primary{% endif %} mb-1 notification-item">
+                        <div class="profile-icon-img-overlay d-block mr-2 float-left">
+                            <img src="{{ folder }} /public/img/{{ notification.profile_pic }}" alt="user Icon">
+                        </div> 
+                        <div class="text-left ml-5"><b>{{ notification.firstname }} {{ notification.lastname }}</b> comments in your {% if notification.type == 'profile_pic' %}profile photo {% elseif notification.type == 'cover_pic' %}cover photo{% else %}{{ notification.type }}{% endif %}.  <i class="fas fa-comment-alt text-success"></i> <br>
+                            <small class="text-muted ml-1">{{ notification.time }}</small>
+                        </div>
+                    </a>                
+                {% endif %}
+
+                {% if notification.notify_type == 'friendReq' %} 
+                <a href="{{ url_root }}/profile/{{ notification.sender }}" class="btn btn-light {% if notification.seen == 0 %}alert-primary{% endif %} mb-1 notification-item">
+                    <div class="profile-icon-img-overlay d-block mr-2 float-left">
+                        <img src="{{ folder }} /public/img/{{ notification.profile_pic }}" alt="user Icon">
+                    </div> 
+                    <div class="text-left ml-5"><b>{{ notification.firstname }} {{ notification.lastname }}</b> accept your friend request. <i class="fas fa-user-friends text-primary"></i> <br>
+                        <small class="text-muted ml-1">{{ notification.time }}</small>
+                    </div>
+                </a>                 
+                {% endif %}                   
+            {% endfor %}
+        </div>
+        </div>
+{% endif %}

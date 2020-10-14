@@ -19,7 +19,6 @@ $(document).ready(function() {
             <img src="/spectrum/public/emoji/emoji-15.png" alt="imoji-15" class="emoji">
             <img src="/spectrum/public/emoji/emoji-16.png" alt="imoji-16" class="emoji">
     `;
-    
 
     ////// dropdown toggler
     $('#friend-request').click(function() {
@@ -116,7 +115,7 @@ $(document).ready(function() {
 
     ////// chat toast toggle ////
     function messageLinkEvent() {
-        $('.message-link').click(function() {
+        $('.message-link').off().click(function() {
             var user_id = $(this).attr("data-id");
             var name = $(this).children().children("b").text();
             var pic = $(this).children().children("img").attr('src');
@@ -186,6 +185,11 @@ $(document).ready(function() {
             if (status == 'success') {
                 response = JSON.parse(response);
                 if (response.status == true) {
+                    if (response.unseen) {
+                        $('.messages .badge').text(response.unseen);
+                    } else {
+                        $('.messages .badge').html('');
+                    }
                     $('#messagesDropdown').html(response.chatHolder);
                     $('#chat-body').html(response.messages);
                     scrollToastChatBody();
@@ -220,6 +224,11 @@ $(document).ready(function() {
                 } else {
                     response = JSON.parse(response)
                     if (response.status == true) {
+                        if (response.unseen) {
+                            $('.messages .badge').text(response.unseen);
+                        } else {
+                            $('.messages .badge').html('');
+                        }
                         $('#messagesDropdown').html(response.chatHolder);
                         $('#chat-body').html(response.messages);
                         scrollToastChatBody();
@@ -250,6 +259,11 @@ $(document).ready(function() {
                 } else {
                     response = JSON.parse(response)
                     if (response.status == true) {
+                        if (response.unseen) {
+                            $('.messages .badge').text(response.unseen);
+                        } else {
+                            $('.messages .badge').html('');
+                        }
                         $('#messagesDropdown').html(response.chatHolder);
                         $('#chat-body').html(response.messages);
                         scrollToastChatBody();
@@ -365,6 +379,7 @@ $(document).ready(function() {
                     id: post_id 
                 },function (response, status) {
                 if (status == 'success') {
+                    console.log(response);
                     if (response == true) {
                         $('.like-btn[data-id="'+post_id+'"]').attr('post-like', '1').addClass('text-primary').children('.far').removeClass('far').addClass('fas');
                         var count = parseInt($('.like-count[data-id="'+post_id+'"]').text());
@@ -541,16 +556,40 @@ $(document).ready(function() {
         }
     });
 
-     ////// post action //////
-     $('.post-option').click(function() {
+    /// search input
+    $('#searchInput').keyup(function() {
+        var key = $(this).val().trim();
+        if (key) {
+            $.post(folder + "/ajax/search",
+                {
+                    key: key,
+                },function (response, status) {
+                if (status == 'success') {
+                    if (response) {
+                       response = JSON.parse(response);
+                       $('#searchList').html(response.searchList);
+                    } else {
+                        $('#searchList').html('');
+                    }
+                } else {
+                    $('#searchList').html('');
+                }
+            });
+        } else {
+            $('#searchList').html('');
+        }
+    });
+
+    
+    ////// post action //////
+    $('.post-option').click(function() {
         $(this).children('.post-option-dropdown').toggleClass('d-none');
     });
     //// flash msg fade out //////
     $('.alert-dismissable').fadeOut(5000);
 
     /// tost chat body scroll ///
-   function scrollToastChatBody() {
+    function scrollToastChatBody() {
         $('#chat-body').animate({scrollTop: $('#chat-body')[0].scrollHeight});
-   }
-
+    }
 });

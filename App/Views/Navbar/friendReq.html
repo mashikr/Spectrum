@@ -1,0 +1,16 @@
+{% if friendsRrequests %}
+    <div class="d-flex flex-column p-2 bg-white rounded shadow" id="friend-request-dropdown">
+        <div class="dropdown-inner">
+            {% for request in friendsRrequests %}
+                <a href="{{ url_root }}/profile/{{ request.sender }}" class="btn {% if request.seen == 0 %}alert-primary{% endif %} btn-light mb-1">
+                    <div class="profile-icon-img-overlay mr-2 float-left">
+                        <img src="{{ folder }} /public/img/{{ request.profile_pic }}" alt="{{ request.firstname }} {{ request.lastname }}">
+                    </div> 
+                <div class="text-left ml-5"><b>{{ request.firstname }} {{ request.lastname }}</b> send you a friend request. <br>
+                        <small class="text-muted ml-2">{{ request.time }}</small>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}

@@ -41,7 +41,7 @@ class Home extends \Core\Controller {
             }
           }
 
-          /// get friends requests ////
+        /// get friends requests ////
         $allRequests = $this->getRequest();
         $countRequest = 0;
 

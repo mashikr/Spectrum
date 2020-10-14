@@ -7,26 +7,41 @@
     <link rel="stylesheet" href="{{ folder }}/public/css/font-awesome.min.css">
     <link rel="stylesheet" href="{{ folder }}/public/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ folder }}/public/css/style.css">
-    <style>
-      .error {
-        color: var(--danger);
-        font-size: .8rem;
-      }
-    </style>
     <title>{% block title %} {% endblock %}</title>
 </head>
 <body>
-
-        
-        
-        {% block body %}
-        {% endblock %}
+    {% block body %}
+    {% endblock %}
 
     <script src="{{ folder }}/public/js/jquery.min.js"></script>
     <script src="{{ folder }}/public/js/popper.min.js"></script>
     <script src="{{ folder }}/public/js/bootstrap.min.js"></script>
-    <script src="{{ folder }}/public/js/app.js"></script>    
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script> 
+    <script src="{{ folder }}/public/js/app.js"></script>
     {% block footer %}  
     {% endblock %}
+    <script src="{{ folder }}/public/js/pusher.js"></script>
+    <script> 
+        var pusher = new Pusher('de7fc67bed3f21045303', {
+            cluster: 'ap2'
+        });
+    
+        var channel = pusher.subscribe('friendReq');
+        channel.bind('to-{{ cur_user.id }}', function(data) {
+           friendReqPush(data);
+        });
+
+        var channel2 = pusher.subscribe('notification');
+        channel2.bind('to-{{ cur_user.id }}', function(data) {
+            notificationPush(data);
+        });
+
+        var channel2 = pusher.subscribe('message');
+        channel2.bind('to-{{ cur_user.id }}', function(data) {
+            messagePush(data);
+        });
+    </script>
+    
+    
 </body>
 </html>

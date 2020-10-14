@@ -100,7 +100,26 @@ body {
     z-index: 1200;
     top: -999px;
 }
-#friend-request-dropdown .dropdown-inner, #messages-dropdown .dropdown-inner, #notification-dropdown .dropdown-inner {
+#search-dropdown {
+    width: 18rem;
+    position: absolute;
+    left: 0;
+    z-index: 1200;
+    top: 2.5rem !important;
+}
+#search-dropdown::before {
+    content: " ";
+    height: 0;
+    position: absolute;
+    top: -.5rem;
+    width: 0;
+    z-index: 1;
+    left: 2rem;
+    border: medium solid white;
+    border-width: 0px 10px 10px 10px;
+    border-color: transparent transparent white transparent;
+}
+#friend-request-dropdown .dropdown-inner, #messages-dropdown .dropdown-inner, #notification-dropdown .dropdown-inner, #search-dropdown .dropdown-inner {
     width: 100%;
     max-height: 20rem;
     overflow-y: scroll;
@@ -249,7 +268,7 @@ body {
     max-height: 5.2rem;
     width: auto !important;
 }
-#failed-msg {
+#failed-msg, #notify-msg {
     position: fixed;
     top: 4rem;
     right: 0;
@@ -315,6 +334,10 @@ body {
 #message-body audio, #chat-body audio {
     width: 220px;
     height: 35px;
+}
+.error {
+    color: var(--danger);
+    font-size: .8rem;
 }
 @media only screen and (max-width: 768px) {
     

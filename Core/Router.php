@@ -5,6 +5,11 @@ namespace Core;
 class Router {
     protected $routes = [];
     protected $params = [];
+    protected $pusher = '';
+
+    public function __construct($push) {
+        $this->pusher = $push;
+    }
 
     public function add($route, $params = []) {
         // convert the route to a regular expression escape forward slashes
@@ -67,7 +72,7 @@ class Router {
             $controller = $this->getNamespace() . $controller;
 
             if (class_exists($controller)) {
-                $controller_object = new $controller($this->params);
+                $controller_object = new $controller($this->params, $this->pusher);
 
                 $action = $this->params['action'];
                 $action = $this->convertToCamelCase($action);

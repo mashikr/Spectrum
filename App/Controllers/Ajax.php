@@ -3,12 +3,14 @@
 namespace App\Controllers;
 
 use \Core\View;
+use \App\Pusher;
 use \App\Models\User;
 use \App\Models\Post;
 use \App\Models\UpdateProfile;
 use \App\Models\Findfriend;
 use \App\Models\Notification;
 use \App\Models\Message;
+use \App\Models\Search;
 
 class Ajax extends \Core\Controller {
 
@@ -106,6 +108,27 @@ class Ajax extends \Core\Controller {
            if (Findfriend::sendRequest($_POST['id'])) {
             $user = User::getUserById($_POST['id']);
             $user['status'] = 1;
+
+            /// get friends requests ////
+            $Requests = $this->getRequest($_POST['id']);
+            $allRequests = $Requests['requests'];
+            $countRequest = 0;
+            if ($allRequests) {
+            foreach ($allRequests as $request) {
+                if ($request['seen'] == 0) {
+                $countRequest++;
+                }
+            }
+            }
+
+            $data = [
+                'sender' =>  $_SESSION['user']['name'],
+                'count' =>  $countRequest,
+                'reqdropdown' => View::getTemplate("Navbar/friendReq.html", ['friendsRrequests' => $allRequests])
+            ];
+            
+            $this->pusher->trigger('friendReq', 'to-'.$_POST['id'], $data);
+
             echo json_encode($user);
            } else {
                echo false;
@@ -120,6 +143,27 @@ class Ajax extends \Core\Controller {
            if (Findfriend::cancelRequest($_POST['id'])) {
             $user = User::getUserById($_POST['id']);
             $user['status'] = 1;
+
+            /// get friends requests ////
+            $Requests = $this->getRequest($_POST['id']);
+            $allRequests = $Requests['requests'];
+            $countRequest = 0;
+            if ($allRequests) {
+            foreach ($allRequests as $request) {
+                if ($request['seen'] == 0) {
+                $countRequest++;
+                }
+            }
+            }
+
+            $data = [
+                'count' =>  $countRequest,
+                'reqdropdown' => View::getTemplate("Navbar/friendReq.html", ['friendsRrequests' => $allRequests])
+            ];
+            
+            $this->pusher->trigger('friendReq', 'to-'.$_POST['id'], $data);
+
+
             echo json_encode($user);
            } else {
                echo false;
@@ -155,6 +199,19 @@ class Ajax extends \Core\Controller {
 
             Findfriend::addFriend($id, $friends);
             Notification::acceptReqNotify($id);
+
+             ////// get notification /////
+            $notifications =  $this->getNotifications($id);
+            $allNotify = $notifications['allNotify'];
+            $countNotify = $notifications['count'];
+
+            $data = [
+                'sender' =>  $_SESSION['user']['name'],
+                'category' => 'friendReq',
+                'count' =>  $countNotify,
+                'notifydropdown' => View::getTemplate("Navbar/notificationDropdown.html", ['notifications' => $allNotify])
+            ];
+            $this->pusher->trigger('notification', 'to-'.$id, $data);
 
             if (Findfriend::declineRequest($id)) {
                 echo true;
@@ -196,12 +253,28 @@ class Ajax extends \Core\Controller {
         if ($_POST['id']) {
             $id = $_POST['id'];
             $like_id = Post::likePost($id);
-            $post_author = Post::getPostAuthor($id);
+            $author_type = Post::getPostAuthor($id, true);
+            $post_author = $author_type['author'];
 
             if ($post_author == $_SESSION['user_id']) {
                 echo true;
             } else {
                if (Notification::likesNotify($id, $like_id)) {
+
+                //// get notification /////
+                $notifications =  $this->getNotifications($post_author);
+                $allNotify = $notifications['allNotify'];
+                $countNotify = $notifications['count'];
+
+                $data = [
+                    'sender' =>  $_SESSION['user']['name'],
+                    'category' => 'likes',
+                    'type' => $author_type['type'],
+                    'count' =>  $countNotify,
+                    'notifydropdown' => View::getTemplate("Navbar/notificationDropdown.html", ['notifications' => $allNotify])
+                ];
+                $this->pusher->trigger('notification', 'to-'.$post_author, $data);
+                
                    echo true;
                } else {
                    echo false;
@@ -216,6 +289,17 @@ class Ajax extends \Core\Controller {
         if ($_POST['id']) {
             $id = $_POST['id'];
             if (Post::unlikePost($id)) {
+                $post_author = Post::getPostAuthor($id, false);
+                //// get notification /////
+                $notifications =  $this->getNotifications($post_author);
+                $allNotify = $notifications['allNotify'];
+                $countNotify = $notifications['count'];
+
+                $data = [
+                    'count' =>  $countNotify,
+                    'notifydropdown' => View::getTemplate("Navbar/notificationDropdown.html", ['notifications' => $allNotify])
+                ];
+                $this->pusher->trigger('notification', 'to-'.$post_author, $data);
                 echo true;
             } else {
                 echo false;
@@ -230,11 +314,27 @@ class Ajax extends \Core\Controller {
             $id = $_POST['id'];
             $comment = $_POST['comment'];
             $comment_id = Post::commentText($id, $comment);
-            $post_author = Post::getPostAuthor($id);
+            $author_type = Post::getPostAuthor($id, true);
+            $post_author = $author_type['author'];
             if ($post_author == $_SESSION['user_id']) {
                 echo true;
             } else {
                 if (Notification::commentNotify($id, $comment_id)) {
+
+                    //// get notification /////
+                    $notifications =  $this->getNotifications($post_author);
+                    $allNotify = $notifications['allNotify'];
+                    $countNotify = $notifications['count'];
+
+                    $data = [
+                        'sender' =>  $_SESSION['user']['name'],
+                        'category' => 'comments',
+                        'type' => $author_type['type'],
+                        'count' =>  $countNotify,
+                        'notifydropdown' => View::getTemplate("Navbar/notificationDropdown.html", ['notifications' => $allNotify])
+                    ];
+                    $this->pusher->trigger('notification', 'to-'.$post_author, $data);
+
                     echo true;
                 } else {
                     echo false;
@@ -250,12 +350,28 @@ class Ajax extends \Core\Controller {
             $id = $_POST['id'];
             $emoji = $_POST['emoji'];
             $comment_id = Post::commentEmoji($id, $emoji);
-            $post_author = Post::getPostAuthor($id);
+            $author_type = Post::getPostAuthor($id, true);
+            $post_author = $author_type['author'];
 
             if ($post_author == $_SESSION['user_id']) {
                 echo true;
             } else {
                 if (Notification::commentNotify($id, $comment_id)) {
+
+                    //// get notification /////
+                    $notifications =  $this->getNotifications($post_author);
+                    $allNotify = $notifications['allNotify'];
+                    $countNotify = $notifications['count'];
+
+                    $data = [
+                        'sender' =>  $_SESSION['user']['name'],
+                        'category' => 'comments',
+                        'type' => $author_type['type'],
+                        'count' =>  $countNotify,
+                        'notifydropdown' => View::getTemplate("Navbar/notificationDropdown.html", ['notifications' => $allNotify])
+                    ];
+                    $this->pusher->trigger('notification', 'to-'.$post_author, $data);
+
                     echo true;
                 } else {
                     echo false;
@@ -284,12 +400,27 @@ class Ajax extends \Core\Controller {
             }
 
             $comment_id = Post::commentPhoto($post_id, $file_name);
-            $post_author = Post::getPostAuthor($post_id);
+            $author_type = Post::getPostAuthor($post_id, true);
+            $post_author = $author_type['author'];
             
             if ($post_author == $_SESSION['user_id']) {
                 echo true;
             } else {
                 if (Notification::commentNotify($post_id, $comment_id)) {
+                     //// get notification /////
+                     $notifications =  $this->getNotifications($post_author);
+                     $allNotify = $notifications['allNotify'];
+                     $countNotify = $notifications['count'];
+ 
+                     $data = [
+                         'sender' =>  $_SESSION['user']['name'],
+                         'category' => 'comments',
+                         'type' => $author_type['type'],
+                         'count' =>  $countNotify,
+                         'notifydropdown' => View::getTemplate("Navbar/notificationDropdown.html", ['notifications' => $allNotify])
+                     ];
+                     $this->pusher->trigger('notification', 'to-'.$post_author, $data);
+ 
                     echo true;
                 } else {
                     echo false;
@@ -315,7 +446,7 @@ class Ajax extends \Core\Controller {
                 array_push($allcomments, $comment);
             }
         }
-        $author = Post::getPostAuthor($post_id);
+        $author = Post::getPostAuthor($post_id, false);
         $post['id'] = $post_id;
 
         View::renderTemplate('Post/comments.html', [
@@ -409,11 +540,16 @@ class Ajax extends \Core\Controller {
 
         if ($_POST) {
             if (Message::sendMessage($_POST['id'], $_POST['message'], $_POST['type'])) {
+                Message::seenMsg($_POST['id']);
                 if (isset($_POST['page']) && $_POST['page'] == 'msg') {
                     echo $this->messageHelper($_POST['id']);
                 } else {
                     echo $this->sendMessageHelper($_POST['id']);
                 }
+                $data = [
+                    'sender' =>  $_SESSION['user_id']
+                ];
+                $this->pusher->trigger('message', 'to-'.$_POST['id'], $data);
             } else {
                 echo json_encode(['status' => false]);
             }
@@ -432,10 +568,12 @@ class Ajax extends \Core\Controller {
 
         /// get messages
         $messageHolders = $this->getMessages();
+        $unseen = $messageHolders['unseen'];
         $chatHolders = $messageHolders['chatHolders'];
 
         return json_encode([
             'status' => true,
+            'unseen' => $unseen,
             'chatHolder' => View::getTemplate('Navbar/chatHolder.html', [
                     'chatHolders' =>  $chatHolders
                 ]),
@@ -490,11 +628,18 @@ class Ajax extends \Core\Controller {
             }
 
             if (Message::sendMessage($user_id, $file_name, 'image')) {
+                Message::seenMsg($user_id);
+
                 if (isset($_POST['page']) && $_POST['page'] == 'msg') {
                     echo $this->messageHelper($user_id);
                 } else {
                     echo $this->sendMessageHelper($user_id);
                 }
+
+                $data = [
+                    'sender' =>  $_SESSION['user_id']
+                ];
+                $this->pusher->trigger('message', 'to-'.$user_id, $data);
             } else {
                 echo json_encode(['status' => false, 'msg' => 'failed']);
             }
@@ -520,14 +665,116 @@ class Ajax extends \Core\Controller {
                 return;
             }
             if (Message::sendMessage($user_id, $file_name, $type)) {
+                Message::seenMsg($user_id);
+
                 if (isset($_POST['page']) && $_POST['page'] == 'msg') {
                     echo $this->messageHelper($user_id);
                 } else {
                     echo $this->sendMessageHelper($user_id);
                 }
+
+                $data = [
+                    'sender' =>  $_SESSION['user_id']
+                ];
+                $this->pusher->trigger('message', 'to-'.$user_id, $data);
             } else {
                 echo json_encode(['status' => false, 'msg' => 'failed']);
             }
+        }
+    }
+
+    public function searchAction() {
+        $this->before();
+
+        if ($_POST) {
+            if ($searchList = Search::getSearchItem($_POST['key'])) {
+               echo json_encode([
+                    'status' => true,
+                    'searchList' => View::getTemplate('Navbar/searchList.html', [
+                        'searchItems' => $searchList
+                        ])
+                    ]);
+            }
+        }
+    }
+
+    public function getToastChat() {
+        $this->before();
+
+        if ($_POST) {
+            /// get messages
+            $messageHolders = $this->getMessages();
+            $unseen = $messageHolders['unseen'];
+            $chatHolders = $messageHolders['chatHolders'];
+
+            if ($_POST['message'] == 'true') {
+                
+                $messages = Message::getMessage($_POST['id']);
+                $allmessages = [];
+                if ($messages) {
+                    foreach ($messages as $message) {
+                        $message['time'] = $this->calcTime($message['time']);
+                        array_push($allmessages, $message);
+                    }
+                }
+                
+                echo json_encode([
+                    'status' => true,
+                    'count' => $unseen,
+                    'chatHolder' => View::getTemplate('Navbar/chatHolder.html', [
+                            'chatHolders' =>  $chatHolders
+                        ]),
+                    'messages' => View::getTemplate('Messages/messages.html', [
+                        'messages' => $allmessages
+                        ])
+                    ]);
+            } else {
+                echo json_encode([
+                    'status' => true,
+                    'count' => $unseen,
+                    'chatHolder' => View::getTemplate('Navbar/chatHolder.html', [
+                            'chatHolders' =>  $chatHolders
+                        ])
+                    ]);
+            }
+        }
+    }
+
+    public function getChat() {
+        $this->before();
+
+        if ($_POST) {
+           /// get messages
+           $messageHolders = $this->getMessages();
+           $chatHolders = $messageHolders['chatHolders'];
+
+           if ($_POST['message'] == 'true') {
+               $messages = Message::getMessage($_POST['id']);
+               $allmessages = [];
+               if ($messages) {
+                   foreach ($messages as $message) {
+                       $message['time'] = $this->calcTime($message['time']);
+                       array_push($allmessages, $message);
+                   }
+               }
+               
+               echo json_encode([
+                   'status' => true,
+                   'chatHolder' => View::getTemplate('Messages/chatHolder.html', [
+                           'chatHolders' =>  $chatHolders
+                       ]),
+                   'messages' => View::getTemplate('Messages/messages.html', [
+                       'messages' => $allmessages
+                       ])
+                   ]);
+           } else {
+               echo json_encode([
+                   'status' => true,
+                   'chatHolder' => View::getTemplate('Messages/chatHolder.html', [
+                           'chatHolders' =>  $chatHolders
+                       ])
+                   ]);
+           }
         }
     }
 }
